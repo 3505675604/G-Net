@@ -1,0 +1,15 @@
+# Windows x64 / Python 3.11 desktop build. Versions verified against official PyPI.
+-r requirements-lock.txt
+pywebview==6.2.1
+pythonnet==3.2.0
+clr_loader==0.3.1
+proxy_tools==0.1.0
+bottle==0.13.4
+typing_extensions==4.16.0
+PyInstaller==6.22.3
+pyinstaller-hooks-contrib==2026.8
+altgraph==0.17.5
+packaging==26.3
+pefile==2024.8.26
+pywin32-ctypes==0.2.3
+setuptools==84.0.0

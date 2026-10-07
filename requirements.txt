@@ -1,0 +1,5 @@
+# 服务器工具 依赖清单（需要 Python 3.9 或更高版本）
+Flask>=3.0,<4        # Web 面板框架（server-manager/app.py）
+flask-sock>=0.7.0    # WebSocket 支持（面板内的 Web 终端）
+paramiko>=3.4,<6     # SSH / SFTP 远程管理（面板及根目录所有脚本）
+PyYAML==6.0.3       # 本机 Clash YAML 安全解析

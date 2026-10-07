@@ -1,0 +1,103 @@
+服务器管家已启动: http://127.0.0.1:8620
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:8620
+Press CTRL+C to quit
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/vendor/xterm-addon-fit-0.8.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/vendor/xterm-5.3.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/vendor/qrcode-1.0.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/network-scene.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/network-theme.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /static/vendor/xterm-5.3.0.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:12] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:25] "DELETE /api/servers/4f81d563 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:25] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:25] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:27] "DELETE /api/servers/af24eaa4 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:27] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:27] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:54] "POST /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:54] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:54] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:41:54] "GET /api/servers HTTP/1.1" 200 -
+首次保存 SSH 主机身份：107.197.188.198 SHA256:InMPiDGZoJP95lF7ypO85zhLEJFi5EfWGF+bfS1bN/I
+127.0.0.1 - - [04/Oct/2026 13:41:56] "POST /api/servers/894644ba367344029f8199f0de9e146b/test HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:02] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:22] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:22] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:23] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:26] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:26] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:28] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:28] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:28] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:29] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:31] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:46] "POST /api/nodes/list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:42:58] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:43:07] "POST /api/servers/894644ba367344029f8199f0de9e146b/rdp HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:43:44] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:43:44] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:43:47] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:43:53] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 13:44:37] "GET /ws/terminal/894644ba367344029f8199f0de9e146b?token=ny2WRJXKq58VMeCDvdliDyGO9-GItcbtsi-MI6urvYs HTTP/1.1" 200 -
+服务器管家已启动: http://127.0.0.1:8620
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:8620
+Press CTRL+C to quit
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /api/health HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/network-theme.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/vendor/xterm-5.3.0.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/network-scene.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/vendor/xterm-addon-fit-0.8.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/vendor/qrcode-1.0.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:49] "GET /static/vendor/xterm-5.3.0.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:50] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:50] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:50] "GET /static/fl-network.svg HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:52] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:54] "POST /api/servers/894644ba367344029f8199f0de9e146b/test HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:17:58] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:00] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:01] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root/.gnupg HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:03] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:14] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root/Music HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:18] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/root HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:20] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:22] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:25] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:25] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:28] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:30] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:33] "POST /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:33] "GET /api/settings HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:41] "GET /api/servers/894644ba367344029f8199f0de9e146b/files?path=/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:47] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:47] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:56] "POST /api/servers/894644ba367344029f8199f0de9e146b/run HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:57] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:58] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:18:59] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:00] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:01] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:02] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:03] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:04] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:05] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:06] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:07] "GET /api/jobs/6237eef15ba4489da8f8015dd8154f1c HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:11] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:11] "GET /api/nodes/protocols HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:13] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:23] "POST /api/nodes/list HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:36] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:53] "GET /api/servers HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:19:59] "GET /api/servers/894644ba367344029f8199f0de9e146b/info HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 14:37:10] "GET /ws/terminal/894644ba367344029f8199f0de9e146b?token=APR4mAgCjb2EiEhTW48nhM7ZbJun9KNDHKdBM8XkkrQ HTTP/1.1" 200 -
