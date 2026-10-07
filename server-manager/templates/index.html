@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-Network · 服务器管家</title>
+<meta name="theme-color" content="#080f1c">
+<meta name="fl-loopback-port" content="{{ loopback_port }}">
+<link rel="icon" type="image/svg+xml" href="/static/fl-network.svg">
+<link rel="stylesheet" href="/static/vendor/xterm-5.3.0.min.css">
+<link rel="stylesheet" href="/static/network-theme.css">
+<link rel="stylesheet" href="/static/clash-workspace.css">
+</head>
+<body>
+<svg class="icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><symbol id="i-network" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="5" r="2"/><circle cx="20" cy="5" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><path d="m6 7 4 3m4 0 4-3M6 17l4-3m4 0 4 3"/></symbol><symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M12 6.5h5M12 17.5h5"/></symbol><symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3m6 0h4"/></symbol><symbol id="i-tools" viewBox="0 0 24 24"><path d="M14 6a4 4 0 0 0-5 5L3 17a2.8 2.8 0 0 0 4 4l6-6a4 4 0 0 0 5-5l-3 3-3-3 3-3Z"/></symbol><symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3-1 3-3 1 1 4-1 4 3 1 1 3h6l1-3 3-1-1-4 1-4-3-1-1-3Z"/><circle cx="12" cy="11" r="3"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-6"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 8a8 8 0 1 0 0 8M20 3v5h-5"/></symbol><symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol><symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol><symbol id="i-code" viewBox="0 0 24 24"><path d="m7 7-5 5 5 5m10-10 5 5-5 5m-6 3 2-16"/></symbol><symbol id="i-desktop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M12 17v4M8 21h8"/></symbol><symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z"/></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol><symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7Z"/><path d="m3 7 9 5 9-5M12 12v10M7.5 4.5l9 5"/></symbol><symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 1v5m6-5v5M9 18v5m6-5v5M1 9h5m-5 6h5m12-6h5m-5 6h5"/><path d="M10 10h4v4h-4Z"/></symbol><symbol id="i-memory" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10v4m5-4v4m5-4v4M6 18v3m4-3v3m4-3v3m4-3v3"/></symbol><symbol id="i-disk" viewBox="0 0 24 24"><path d="m5 3-3 13a3 3 0 0 0 3 5h14a3 3 0 0 0 3-5L19 3Z"/><path d="M2 16h20M16 18h.01m3-.01h.01"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol><symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6Z"/></symbol><symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7Z"/><path d="M14 2v5h5M8 12h8M8 16h6"/></symbol></defs></svg>
+<aside id="sidebar" aria-label="服务器列表">
+  <div class="brand"><div class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></div><div class="brand-copy"><span class="brand-kicker">G-NETWORK</span><h1 class="brand-name">服务器管家</h1></div></div>
+  <div class="sidebar-search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="server-filter" type="search" placeholder="搜索服务器…" aria-label="搜索服务器"></div>
+  <div class="fleet-heading sidebar-section-title"><span>服务器资源</span><span class="fleet-count" id="fleet-count">0</span></div>
+  <div id="server-list"></div>
+  <button type="button" id="add-btn" onclick="showAdd()"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg><span>添加服务器</span></button>
+  <div class="fleet-status"><span class="status-dot"></span><span id="fleet-status">0 台连接已验证</span></div>
+  <div class="sidebar-footer"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><div><strong>本地工作空间</strong><span>SSH · 终端 · 节点管理</span></div></div>
+</aside>
+<main id="main">
+  <header class="workspace-header"><div class="workspace-context"><span class="eyebrow">G-NETWORK / CONTROL CENTER</span><div id="cur-name">网络控制中心</div></div><div class="workspace-actions"><span class="status-pill"><i></i>本地面板</span><button type="button" class="btn btn-g product-help-btn" onclick="window.ProductUI?.openGuide()">使用帮助</button><button type="button" class="icon-btn" onclick="showAdd()" aria-label="添加服务器" title="添加服务器"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></button></div></header>
+  <nav id="tabs" role="tablist" aria-label="工作空间导航"><button type="button" class="tab active" id="tab-dash" data-p="dash" role="tab" aria-selected="true" aria-controls="p-dash" tabindex="0"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg><span>网络概览</span></button><button type="button" class="tab" id="tab-term" data-p="term" role="tab" aria-selected="false" aria-controls="p-term" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>SSH 终端</span></button><button type="button" class="tab" id="tab-tool" data-p="tool" role="tab" aria-selected="false" aria-controls="p-tool" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-tools"></use></svg><span>工具箱</span></button><button type="button" class="tab" id="tab-node" data-p="node" role="tab" aria-selected="false" aria-controls="p-node" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>节点搭建</span></button><button type="button" class="tab" id="tab-clash" data-p="clash" role="tab" aria-selected="false" aria-controls="p-clash" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg><span>Clash 配置</span></button><button type="button" class="tab" id="tab-file" data-p="file" role="tab" aria-selected="false" aria-controls="p-file" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg><span>文件管理</span></button><button type="button" class="tab" id="tab-set" data-p="set" role="tab" aria-selected="false" aria-controls="p-set" tabindex="-1"><svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>设置</span></button></nav>
+  <section class="page active" id="p-dash" role="tabpanel" aria-labelledby="tab-dash">
+    <div class="dashboard-topbar"><div class="dashboard-title"><span class="eyebrow">NETWORK COMMAND</span><h2>网络指挥中心<span class="heading-dot"></span></h2><p>从连接到部署，掌控你的服务器网络。</p></div><div class="dashboard-actions"><span class="snapshot-time" id="dash-updated">等待选择服务器</span><button type="button" class="btn btn-g" id="dashboard-refresh" onclick="refreshWorkspace()"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>刷新工作空间</button></div></div>
+    <div class="network-summary"><div class="summary-stat accent-cyan"><span class="summary-icon"><svg class="icon" aria-hidden="true"><use href="#i-server"></use></svg></span><div><span>服务器资源</span><strong id="summary-servers">0 <small>台</small></strong><small>已添加到工作空间</small></div></div><div class="summary-stat accent-blue"><span class="summary-icon"><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg></span><div><span>当前连接</span><strong id="summary-connection">未选择</strong><small id="summary-currentname">选择一台服务器</small></div></div><div class="summary-stat accent-violet"><span class="summary-icon"><svg class="icon" aria-hidden="true"><use href="#i-tools"></use></svg></span><div><span>执行中任务</span><strong id="summary-jobs">0 <small>项</small></strong><small>部署与工具执行</small></div></div><div class="summary-stat accent-cyan"><span class="summary-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span><div><span>已验证节点</span><strong id="summary-verified">0 <small>台</small></strong><small>本次会话 SSH 验证</small></div></div></div>
+    <div class="overview-grid">
+      <section class="topology-panel page-surface"><div class="panel-heading"><div class="panel-title"><span class="panel-glyph"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></span><div><h3>全息网络视图</h3><span class="section-label">HOLOGRAPHIC TOPOLOGY</span></div></div><span class="panel-chip"><span class="status-dot"></span>管理连接示意</span></div><div class="scene-shell"><canvas id="network-canvas" aria-label="服务器的三维管理连接图，可拖动旋转；也可通过服务器列表选择节点。">请通过服务器列表选择节点。</canvas><div class="scene-overlay"><span class="scene-label">G / NETWORK CORE <b>3D</b></span><span id="scene-count">0 个服务器节点</span></div><div class="scene-controls"><button type="button" class="icon-btn" id="scene-zoom-in" aria-label="放大网络视图" title="放大"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></button><button type="button" class="icon-btn" id="scene-zoom-out" aria-label="缩小网络视图" title="缩小"><svg class="icon" aria-hidden="true"><use href="#i-minus"></use></svg></button><button type="button" class="icon-btn" id="scene-reset" aria-label="重置网络视角" title="重置视角"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg></button><button type="button" class="icon-btn" id="scene-motion" aria-label="暂停网络动画" aria-pressed="false" title="暂停动画"><svg class="icon" aria-hidden="true"><use href="#i-pause"></use></svg></button></div><div class="scene-legend"><span><i class="dot-connected"></i>验证通过</span><span><i class="dot-pending"></i>待验证</span><span><i class="dot-error"></i>连接失败</span></div><div class="scene-caption" id="scene-caption">添加服务器，开启你的网络</div></div><div class="topology-footer"><span><svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg>立体视图</span><span>拖动旋转 · 点击节点选择</span><span class="topology-footer-end">SSH NETWORK</span></div></section>
+      <aside class="inspector-panel page-surface"><div class="panel-heading"><div class="panel-title"><h3>节点详情</h3></div><button type="button" class="icon-btn danger" id="inspector-delete" onclick="removeSelectedServer()" disabled title="删除当前服务器" aria-label="删除当前服务器"><svg class="icon" aria-hidden="true"><use href="#i-trash"></use></svg></button></div><div class="inspector-identity"><div class="inspector-emblem"><svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg><i></i></div><span class="section-label">SELECTED SERVER</span><h3 id="inspector-name">尚未选择节点</h3><span class="connection-chip" id="inspector-state" data-status="unchecked">等待选择</span></div><dl class="inspector-meta"><div><dt>服务器地址</dt><dd id="inspector-host">—</dd></div><div><dt>SSH 端口</dt><dd id="inspector-port">—</dd></div><div><dt>登录用户</dt><dd id="inspector-user">—</dd></div></dl><div class="inspector-actions" id="inspector-actions"><button type="button" class="btn btn-p" id="inspector-terminal" onclick="goTab('term')" disabled><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg>打开 SSH 终端 <svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></button><div><button type="button" class="btn btn-g" id="inspector-files" onclick="goTab('file')" disabled><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg>文件管理</button><button type="button" class="btn btn-g" id="inspector-connect" onclick="if(cur)select(cur)" disabled><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>验证连接</button></div></div><p class="inspector-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>状态来自本次会话的连接测试。</p></aside>
+    </div>
+    <div class="server-connection-bar"><span id="server-auth-summary">选择服务器查看登录方式</span><button type="button" class="btn btn-g" id="server-edit" onclick="editServer()" disabled>编辑连接 / 补充凭据</button></div>
+    <div id="dash-content"><div class="empty dashboard-empty"><div class="empty-symbol"><svg class="icon" aria-hidden="true"><use href="#i-server"></use></svg></div><div><strong>你的下一台服务器，从这里开始</strong><p>添加或选择服务器后，即可查看资源快照与已安装工具。</p></div><button type="button" class="btn btn-g" onclick="showAdd()">添加服务器 <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg></button></div></div>
+  </section>
+  <section class="page" id="p-term" role="tabpanel" aria-labelledby="tab-term">
+  <div class="page-heading"><div><span class="eyebrow">SECURE SHELL / 交互连接</span><h2>SSH 终端</h2><p>直达服务器的命令工作台。选择服务器后开始会话。</p></div></div>
+  <div class="page-surface terminal-chrome">
+    <div class="panel-heading terminal-toolbar">
+      <div class="terminal-target"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><div><span class="section-label">当前会话目标</span><strong id="term-target">未选择服务器</strong></div></div>
+      <div class="terminal-status"><span class="signal-light" aria-hidden="true"></span><span id="term-status" role="status" aria-live="polite">等待连接</span></div>
+      <button type="button" class="btn btn-p" onclick="openTerm(true)"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>重新连接</button>
+    </div>
+    <div class="terminal-meta"><span class="terminal-window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="term-session-meta">SSH · 交互会话</span><span class="surface-tag">LIVE CONSOLE</span></div>
+    <div id="term-wrap"><div id="terminal" aria-label="远程服务器终端"></div></div>
+    <div class="terminal-footer"><span><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>终端输入将发送到当前服务器</span><span>窗口变化时自动调整会话尺寸</span></div>
+  </div>
+</section>
+<section class="page" id="p-tool" role="tabpanel" aria-labelledby="tab-tool">
+  <div class="page-heading"><div><span class="eyebrow">OPERATIONS TOOLKIT / 常用操作</span><h2>工具箱</h2><p>把系统维护、AI 工具与网络部署集中到一个工作台。</p></div><span class="surface-tag" id="tool-count" aria-live="polite">8 项工具</span></div>
+  <div class="page-surface tool-controls">
+    <div class="tool-search"><label class="section-label" for="tool-filter">查找工具</label><div class="tool-search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="tool-filter" type="search" placeholder="搜索名称或用途…" autocomplete="off" aria-label="搜索工具名称或用途"></div></div>
+    <div class="tool-category"><span class="section-label">按用途浏览</span><div class="filter-chips" role="group" aria-label="工具分类">
+      <button type="button" class="filter-chip active" data-tool-category="all" aria-pressed="true">全部工具</button>
+      <button type="button" class="filter-chip" data-tool-category="system" data-tone="blue" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg>系统</button>
+      <button type="button" class="filter-chip" data-tool-category="ai" data-tone="violet" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg>AI 工具</button>
+      <button type="button" class="filter-chip" data-tool-category="network" data-tone="cyan" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg>网络</button>
+      <button type="button" class="filter-chip" data-tool-category="desktop" data-tone="blue" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-desktop"></use></svg>桌面</button>
+    </div></div>
+  </div>
+  <div class="surface-note"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>选择服务器后执行操作；提交前会确认目标，执行输出实时显示在下方。</span></div>
+  <div class="page-surface compatibility-banner" id="capabilities-banner" role="status" aria-live="polite"><span class="section-label">服务器兼容性</span><p>选择并验证服务器后，读取操作系统与工具支持情况。</p></div>
+  <div class="tools" id="tools"></div>
+  <div id="job-out" role="log" aria-label="工具执行输出" aria-live="off"></div>
+</section>
+<section class="page" id="p-node" role="tabpanel" aria-labelledby="tab-node">
+  <div class="page-heading"><div><span class="eyebrow">NETWORK DEPLOYMENT / 节点编排</span><h2>节点搭建</h2><p>添加服务器仅保存 SSH 连接，不会自动部署节点。请在这里选择协议并单独执行部署。</p></div></div>
+  <ol class="deployment-steps" aria-label="节点配置流程">
+    <li><span class="step-badge">01</span><div><strong>搭建模式</strong><span>选择服务器与路径</span></div></li>
+    <li><span class="step-badge">02</span><div><strong>协议参数</strong><span>配置端口与身份</span></div></li>
+    <li><span class="step-badge">03</span><div><strong>部署验证</strong><span>备份、应用与检查</span></div></li>
+  </ol>
+  <div class="surface-note manual-trust-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>首次连接的新目标，请先添加此服务器并核对 SSH 指纹，再选择已保存连接。手动输入仅适用于本机已信任的主机。</span></div>
+  <div class="deployment-layout node-config-grid">
+    <div class="ncard page-surface deployment-mode">
+      <div class="block-heading"><span class="step-badge">01</span><div><span class="section-label">连接模式</span><p class="hint">一台服务器直连，或通过入口转发到出口。</p></div><span class="block-icon"><svg class="icon" aria-hidden="true"><use href="#i-server"></use></svg></span></div>
+      <div class="nradio node-mode-grid">
+        <label class="mode-option"><input type="radio" name="n-mode" value="direct" checked onchange="nodeMode()"><span class="mode-option-icon"><svg class="icon" aria-hidden="true"><use href="#i-server"></use></svg></span><span class="mode-option-copy"><strong>直连节点</strong><span>客户端直接连接目标服务器</span></span></label>
+        <label class="mode-option"><input type="radio" name="n-mode" value="relay" onchange="nodeMode()"><span class="mode-option-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></span><span class="mode-option-copy"><strong>中继节点</strong><span>入口转发流量，出口负责出访</span></span></label>
+      </div>
+      <div id="n-box-direct">
+        <div class="form-field"><label class="nlabel" for="n-server">目标服务器</label><select class="nselect" id="n-server" onchange="nodeSrvSel('#n-server','#n-man-direct')"></select></div>
+        <div class="manual-fields" id="n-man-direct" style="display:none">
+  <div class="manual-title"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>手动 SSH 连接</span></div>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-d-host">服务器地址</label><input class="ninput" id="nm-d-host" type="text" placeholder="IP 地址或域名" autocomplete="off"></div><div class="form-field field-short"><label class="nlabel" for="nm-d-port">SSH 端口</label><input class="ninput" id="nm-d-port" type="text" value="22" inputmode="numeric"></div></div>
+<div class="form-field auth-choice"><label class="nlabel" for="nm-d-auth">SSH 登录方式</label><select class="nselect" id="nm-d-auth" onchange="authTypeChanged('nm-d')"><option value="password">密码登录</option><option value="private_key">SSH 私钥</option><option value="agent">本机 SSH Agent</option></select></div>
+<div class="auth-key-fields" id="nm-d-key-fields" hidden><div class="form-field"><label class="nlabel" for="nm-d-key">私钥内容</label><textarea class="ninput private-key-input" id="nm-d-key" rows="4" placeholder="粘贴 PEM / OpenSSH 私钥，或选择本机文件" autocomplete="off" spellcheck="false"></textarea></div><div class="nrow"><div class="form-field"><label class="nlabel" for="nm-d-key-file">从本机选择私钥 · 最大 128 KiB</label><input class="key-file-input" id="nm-d-key-file" type="file" onchange="readPrivateKey('nm-d',this)"></div><div class="form-field"><label class="nlabel" for="nm-d-passphrase">私钥口令 · 可选</label><input class="ninput" id="nm-d-passphrase" type="password" autocomplete="off" placeholder="私钥已加密时填写"></div></div><p class="hint">文件仅在本机读取并传给本地面板，不会上传外网；操作成功或关闭表单后清除输入。</p></div>
+<p class="hint auth-agent-hint" id="nm-d-agent-hint" hidden>使用当前系统的 SSH Agent。请先加载密钥；不支持时可改为私钥登录。</p>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-d-user">SSH 用户名</label><input class="ninput" id="nm-d-user" type="text" value="root" autocomplete="off"></div><div class="form-field" id="nm-d-password-field"><label class="nlabel" for="nm-d-pass">SSH 密码</label><input class="ninput" id="nm-d-pass" type="password" placeholder="填写 SSH 密码" autocomplete="off"></div></div>
+</div>
+      </div>
+      <div id="n-box-relay" style="display:none">
+        <div class="form-field"><label class="nlabel" for="n-entry">入口服务器 · 客户端连接</label><select class="nselect" id="n-entry" onchange="nodeSrvSel('#n-entry','#n-man-entry')"></select></div>
+        <div class="manual-fields" id="n-man-entry" style="display:none">
+  <div class="manual-title"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>手动 SSH 连接</span></div>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-e-host">服务器地址</label><input class="ninput" id="nm-e-host" type="text" placeholder="IP 地址或域名" autocomplete="off"></div><div class="form-field field-short"><label class="nlabel" for="nm-e-port">SSH 端口</label><input class="ninput" id="nm-e-port" type="text" value="22" inputmode="numeric"></div></div>
+<div class="form-field auth-choice"><label class="nlabel" for="nm-e-auth">SSH 登录方式</label><select class="nselect" id="nm-e-auth" onchange="authTypeChanged('nm-e')"><option value="password">密码登录</option><option value="private_key">SSH 私钥</option><option value="agent">本机 SSH Agent</option></select></div>
+<div class="auth-key-fields" id="nm-e-key-fields" hidden><div class="form-field"><label class="nlabel" for="nm-e-key">私钥内容</label><textarea class="ninput private-key-input" id="nm-e-key" rows="4" placeholder="粘贴 PEM / OpenSSH 私钥，或选择本机文件" autocomplete="off" spellcheck="false"></textarea></div><div class="nrow"><div class="form-field"><label class="nlabel" for="nm-e-key-file">从本机选择私钥 · 最大 128 KiB</label><input class="key-file-input" id="nm-e-key-file" type="file" onchange="readPrivateKey('nm-e',this)"></div><div class="form-field"><label class="nlabel" for="nm-e-passphrase">私钥口令 · 可选</label><input class="ninput" id="nm-e-passphrase" type="password" autocomplete="off" placeholder="私钥已加密时填写"></div></div><p class="hint">文件仅在本机读取并传给本地面板，不会上传外网；操作成功或关闭表单后清除输入。</p></div>
+<p class="hint auth-agent-hint" id="nm-e-agent-hint" hidden>使用当前系统的 SSH Agent。请先加载密钥；不支持时可改为私钥登录。</p>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-e-user">SSH 用户名</label><input class="ninput" id="nm-e-user" type="text" value="root" autocomplete="off"></div><div class="form-field" id="nm-e-password-field"><label class="nlabel" for="nm-e-pass">SSH 密码</label><input class="ninput" id="nm-e-pass" type="password" placeholder="填写 SSH 密码" autocomplete="off"></div></div>
+</div>
+        <div class="form-field"><label class="nlabel" for="n-exit">出口服务器 · 流量出访</label><select class="nselect" id="n-exit" onchange="nodeSrvSel('#n-exit','#n-man-exit')"></select></div>
+        <div class="manual-fields" id="n-man-exit" style="display:none">
+  <div class="manual-title"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>手动 SSH 连接</span></div>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-x-host">服务器地址</label><input class="ninput" id="nm-x-host" type="text" placeholder="IP 地址或域名" autocomplete="off"></div><div class="form-field field-short"><label class="nlabel" for="nm-x-port">SSH 端口</label><input class="ninput" id="nm-x-port" type="text" value="22" inputmode="numeric"></div></div>
+<div class="form-field auth-choice"><label class="nlabel" for="nm-x-auth">SSH 登录方式</label><select class="nselect" id="nm-x-auth" onchange="authTypeChanged('nm-x')"><option value="password">密码登录</option><option value="private_key">SSH 私钥</option><option value="agent">本机 SSH Agent</option></select></div>
+<div class="auth-key-fields" id="nm-x-key-fields" hidden><div class="form-field"><label class="nlabel" for="nm-x-key">私钥内容</label><textarea class="ninput private-key-input" id="nm-x-key" rows="4" placeholder="粘贴 PEM / OpenSSH 私钥，或选择本机文件" autocomplete="off" spellcheck="false"></textarea></div><div class="nrow"><div class="form-field"><label class="nlabel" for="nm-x-key-file">从本机选择私钥 · 最大 128 KiB</label><input class="key-file-input" id="nm-x-key-file" type="file" onchange="readPrivateKey('nm-x',this)"></div><div class="form-field"><label class="nlabel" for="nm-x-passphrase">私钥口令 · 可选</label><input class="ninput" id="nm-x-passphrase" type="password" autocomplete="off" placeholder="私钥已加密时填写"></div></div><p class="hint">文件仅在本机读取并传给本地面板，不会上传外网；操作成功或关闭表单后清除输入。</p></div>
+<p class="hint auth-agent-hint" id="nm-x-agent-hint" hidden>使用当前系统的 SSH Agent。请先加载密钥；不支持时可改为私钥登录。</p>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nm-x-user">SSH 用户名</label><input class="ninput" id="nm-x-user" type="text" value="root" autocomplete="off"></div><div class="form-field" id="nm-x-password-field"><label class="nlabel" for="nm-x-pass">SSH 密码</label><input class="ninput" id="nm-x-pass" type="password" placeholder="填写 SSH 密码" autocomplete="off"></div></div>
+</div>
+      </div>
+      <div class="form-field"><label class="nlabel" for="n-remark">节点备注名 · 可选</label><input class="ninput" id="n-remark" type="text" placeholder="如：中继-美国-01"></div>
+      <p class="hint">备注名会显示在客户端导入链接中。</p>
+      <div class="surface-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>增量追加与自动备份；新配置通过验证后应用，应用失败时回滚。</span></div>
+    </div>
+    <div class="ncard page-surface deployment-config">
+      <div class="block-heading"><span class="step-badge">02</span><div><span class="section-label">协议与参数</span><p class="hint">选择客户端支持的协议，并设置监听端口。</p></div><span class="block-icon"><svg class="icon" aria-hidden="true"><use href="#i-network"></use></svg></span></div>
+      <div class="form-field"><label class="nlabel" for="n-proto">节点协议</label><select class="nselect" id="n-proto" onchange="nodeProto()"></select><div class="hint" id="n-proto-desc"></div><p class="protocol-compatibility" id="n-clash-compat"></p></div>
+      <div id="n-port-direct">
+        <label class="nlabel" for="n-port">节点监听端口</label>
+        <div class="nrow port-check-row"><input class="ninput" id="n-port" value="2089" inputmode="numeric"><button type="button" class="btn btn-g" data-action="check-port" onclick="nodeCheckPort()"><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg>检测占用</button></div>
+      </div>
+      <div id="n-port-relay" style="display:none">
+        <div class="nrow"><div class="form-field"><label class="nlabel" for="n-entry-port">入口监听端口</label><input class="ninput" id="n-entry-port" type="text" value="8446" inputmode="numeric"></div><div class="form-field"><label class="nlabel" for="n-exit-port">出口监听端口</label><input class="ninput" id="n-exit-port" type="text" value="2092" inputmode="numeric"></div></div>
+        <button type="button" class="btn btn-g" data-action="check-port" onclick="nodeCheckPort()"><svg class="icon" aria-hidden="true"><use href="#i-activity"></use></svg>检测两台端口占用</button>
+      </div>
+      <div id="n-para-reality">
+        <div class="form-field"><label class="nlabel" for="n-sni">伪装网址 · SNI</label><input class="ninput" id="n-sni" type="text" value="www.amazon.com" autocomplete="off"></div>
+        <p class="hint">Reality 使用此域名的 TLS 指纹。</p>
+        <div class="nrow"><div class="form-field"><label class="nlabel" for="n-uuid">UUID · 可选</label><input class="ninput" id="n-uuid" type="text" placeholder="留空自动生成" autocomplete="off"></div><div class="form-field"><label class="nlabel" for="n-sid">shortId · 可选</label><input class="ninput" id="n-sid" type="text" placeholder="留空自动生成" autocomplete="off"></div></div>
+      </div>
+      <div id="n-para-ws" style="display:none">
+        <div class="form-field"><label class="nlabel" for="n-wspath">WebSocket 路径</label><input class="ninput" id="n-wspath" type="text" value="/ray" autocomplete="off"></div>
+        <div class="form-field"><label class="nlabel" for="n-uuid-ws">UUID · 可选</label><input class="ninput" id="n-uuid-ws" type="text" placeholder="留空自动生成" autocomplete="off"></div>
+      </div>
+      <div id="n-para-ss" style="display:none">
+        <div class="form-field"><label class="nlabel" for="n-ssmethod">Shadowsocks 加密方式</label><select class="nselect" id="n-ssmethod" onchange="nodeProto()"></select></div>
+        <div class="form-field"><label class="nlabel" for="n-sspass">节点密码 · 可选</label><input class="ninput" id="n-sspass" type="password" placeholder="留空自动生成" autocomplete="new-password"></div>
+        <p class="hint">SS2022 留空时会生成符合所选算法的密钥。</p>
+      </div>
+      <div class="hint port-feedback" id="n-port-info" role="status" aria-live="polite"></div>
+      <div class="deployment-launch">
+        <div class="block-heading"><span class="step-badge">03</span><div><span class="section-label">部署与验证</span><p class="hint">备份配置 → 应用节点 → 检查服务和端口。</p></div><span class="block-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span></div>
+        <button type="button" class="btn btn-p" id="node-deploy" onclick="nodeDeploy()"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>开始部署<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="deployment-output"><div id="node-log" role="log" aria-label="节点部署输出" aria-live="off"></div><div id="node-result" class="ncard page-surface"></div></div>
+  <div class="ncard page-surface node-inventory">
+    <div class="panel-heading"><div><span class="eyebrow">INBOUND INVENTORY</span><h3>已有节点</h3><p class="hint">读取当前配置，复制客户端链接或管理已有入站。</p></div><span class="surface-tag"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>备份与验证</span></div>
+    <div class="nrow node-list-toolbar">
+      <div class="form-field"><label class="nlabel" for="nl-server">读取目标服务器</label><select class="nselect" id="nl-server" onchange="nodeSrvSel('#nl-server','#nl-man')"></select></div>
+      <button type="button" class="btn btn-p" id="node-list-load" onclick="loadNodeList()"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>读取节点</button>
+    </div>
+    <div class="manual-fields" id="nl-man" style="display:none">
+  <div class="manual-title"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg><span>手动 SSH 连接</span></div>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nlm-host">服务器地址</label><input class="ninput" id="nlm-host" type="text" placeholder="IP 地址或域名" autocomplete="off"></div><div class="form-field field-short"><label class="nlabel" for="nlm-port">SSH 端口</label><input class="ninput" id="nlm-port" type="text" value="22" inputmode="numeric"></div></div>
+<div class="form-field auth-choice"><label class="nlabel" for="nlm-auth">SSH 登录方式</label><select class="nselect" id="nlm-auth" onchange="authTypeChanged('nlm')"><option value="password">密码登录</option><option value="private_key">SSH 私钥</option><option value="agent">本机 SSH Agent</option></select></div>
+<div class="auth-key-fields" id="nlm-key-fields" hidden><div class="form-field"><label class="nlabel" for="nlm-key">私钥内容</label><textarea class="ninput private-key-input" id="nlm-key" rows="4" placeholder="粘贴 PEM / OpenSSH 私钥，或选择本机文件" autocomplete="off" spellcheck="false"></textarea></div><div class="nrow"><div class="form-field"><label class="nlabel" for="nlm-key-file">从本机选择私钥 · 最大 128 KiB</label><input class="key-file-input" id="nlm-key-file" type="file" onchange="readPrivateKey('nlm',this)"></div><div class="form-field"><label class="nlabel" for="nlm-passphrase">私钥口令 · 可选</label><input class="ninput" id="nlm-passphrase" type="password" autocomplete="off" placeholder="私钥已加密时填写"></div></div><p class="hint">文件仅在本机读取并传给本地面板，不会上传外网；操作成功或关闭表单后清除输入。</p></div>
+<p class="hint auth-agent-hint" id="nlm-agent-hint" hidden>使用当前系统的 SSH Agent。请先加载密钥；不支持时可改为私钥登录。</p>
+  <div class="nrow"><div class="form-field"><label class="nlabel" for="nlm-user">SSH 用户名</label><input class="ninput" id="nlm-user" type="text" value="root" autocomplete="off"></div><div class="form-field" id="nlm-password-field"><label class="nlabel" for="nlm-pass">SSH 密码</label><input class="ninput" id="nlm-pass" type="password" placeholder="填写 SSH 密码" autocomplete="off"></div></div>
+</div>
+    <div id="nl-body"></div>
+    <p class="hint">删除前会备份并验证配置；其他节点将保留。</p>
+  </div>
+</section>
+<section class="page" id="p-clash" role="tabpanel" aria-labelledby="tab-clash">
+  <div class="page-heading"><div class="cw-heading-copy"><span class="cw-heading-symbol" aria-hidden="true"><svg class="icon"><use href="#i-network"></use></svg></span><div><span class="eyebrow">CLASH / MIHOMO STUDIO</span><h2>Clash 配置工作区</h2><p>跨服务器汇集节点，编排策略与路由，生成一份完整配置。</p></div></div><span class="cw-heading-badge"><svg class="icon" aria-hidden="true"><use href="#i-cube"></use></svg>MULTI-NODE / ONE CONFIG</span></div>
+  <div id="clash-workspace"><div class="empty">配置编辑器正在准备…</div></div>
+</section>
+<section class="page" id="p-file" role="tabpanel" aria-labelledby="tab-file">
+  <div class="page-heading"><div><span class="eyebrow">REMOTE FILES / 远程目录</span><h2>文件管理</h2><p>浏览服务器目录，按名称或内容搜索，预览与下载文件。</p></div><span class="surface-tag"><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg>REMOTE EXPLORER</span></div>
+  <div class="page-surface file-surface">
+    <div id="fbar">
+      <div class="file-actions"><button type="button" class="icon-btn" title="上一级" aria-label="上一级目录" onclick="fUp()"><svg class="icon" aria-hidden="true"><use href="#i-up"></use></svg></button><button type="button" class="icon-btn" title="刷新" aria-label="刷新目录" onclick="loadFiles(fpath)"><svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg></button></div>
+      <div class="file-location"><span class="section-label">当前位置</span><div id="crumbs" aria-label="目录路径"></div></div>
+      <div class="file-search-controls">
+        <label class="sr-only" for="f-mode">搜索方式</label><select id="f-mode"><option value="name">按文件名</option><option value="content">按文件内容</option></select>
+        <label class="sr-only" for="f-search">搜索当前目录</label><input id="f-search" type="search" placeholder="搜索当前目录…" onkeydown="if(event.key==='Enter')doSearch()">
+        <button type="button" class="btn btn-p" id="file-search" onclick="doSearch()">搜索<svg class="icon" aria-hidden="true"><use href="#i-arrow"></use></svg></button>
+      </div>
+    </div>
+    <div id="search-results" role="status" aria-live="polite"></div>
+    <div class="file-table-wrap"><table id="ftable"><caption class="sr-only">当前目录中的文件与文件夹</caption><thead><tr><th scope="col">名称</th><th scope="col">大小</th><th scope="col">修改时间</th></tr></thead><tbody id="fbody"></tbody></table></div>
+    <div class="surface-note"><svg class="icon" aria-hidden="true"><use href="#i-folder"></use></svg><span>点击目录进入；点击文件可预览内容或下载。</span></div>
+  </div>
+</section>
+<section class="page" id="p-set" role="tabpanel" aria-labelledby="tab-set">
+  <div class="page-heading"><div><span class="eyebrow">WORKSPACE SETTINGS / APPLICATION</span><h2>工作空间设置</h2><p>管理应用版本、备份和 AI 凭据。敏感凭据不会回填到页面。</p></div></div>
+  <div id="product-settings" class="product-settings" aria-label="应用与数据管理"></div>
+  <div class="settings-layout">
+    <div class="settings-main">
+      <div class="provider-grid"><article class="provider-card page-surface" data-provider="deepseek" data-tone="cyan">
+  <div class="provider-header"><div class="provider-mark" aria-hidden="true"><svg class="provider-logo" viewBox="0 0 48 48"><text x="24" y="31" text-anchor="middle" fill="currentColor" font-family="Segoe UI,sans-serif" font-size="21" font-weight="800">DS</text></svg></div><div class="provider-meta"><h3>DeepSeek</h3><p>DeepSeek Harness</p></div></div>
+  <div class="provider-status"><span class="signal-light" aria-hidden="true"></span><span class="hint" id="ks-deepseek" role="status" aria-live="polite">读取中…</span></div>
+  <div class="form-field"><label class="nlabel" for="k-deepseek">DeepSeek API Key</label><input id="k-deepseek" type="password" autocomplete="new-password" placeholder="输入 API Key（留空保留）"></div>
+  <label class="clear-toggle" for="kc-deepseek"><input id="kc-deepseek" type="checkbox"><span>清除已保存的 Key</span></label>
+</article><article class="provider-card page-surface" data-provider="openai" data-tone="blue">
+  <div class="provider-header"><div class="provider-mark" aria-hidden="true"><svg class="provider-logo" viewBox="0 0 48 48"><text x="24" y="31" text-anchor="middle" fill="currentColor" font-family="Segoe UI,sans-serif" font-size="28" font-weight="800">O</text></svg></div><div class="provider-meta"><h3>OpenAI</h3><p>Codex CLI</p></div></div>
+  <div class="provider-status"><span class="signal-light" aria-hidden="true"></span><span class="hint" id="ks-openai" role="status" aria-live="polite">读取中…</span></div>
+  <div class="form-field"><label class="nlabel" for="k-openai">OpenAI API Key</label><input id="k-openai" type="password" autocomplete="new-password" placeholder="输入 API Key（留空保留）"></div>
+  <label class="clear-toggle" for="kc-openai"><input id="kc-openai" type="checkbox"><span>清除已保存的 Key</span></label>
+</article><article class="provider-card page-surface" data-provider="anthropic" data-tone="violet">
+  <div class="provider-header"><div class="provider-mark" aria-hidden="true"><svg class="provider-logo" viewBox="0 0 48 48"><text x="24" y="31" text-anchor="middle" fill="currentColor" font-family="Segoe UI,sans-serif" font-size="28" font-weight="800">A</text></svg></div><div class="provider-meta"><h3>Anthropic</h3><p>Claude Code</p></div></div>
+  <div class="provider-status"><span class="signal-light" aria-hidden="true"></span><span class="hint" id="ks-anthropic" role="status" aria-live="polite">读取中…</span></div>
+  <div class="form-field"><label class="nlabel" for="k-anthropic">Anthropic API Key</label><input id="k-anthropic" type="password" autocomplete="new-password" placeholder="输入 API Key（留空保留）"></div>
+  <label class="clear-toggle" for="kc-anthropic"><input id="kc-anthropic" type="checkbox"><span>清除已保存的 Key</span></label>
+</article></div>
+      <div class="page-surface settings-footer"><div><strong>保存工作空间设置</strong><p class="hint">三个服务的变更一起保存；未填写的 Key 将保留。</p></div><button type="button" class="btn btn-p" id="settings-save" onclick="saveSettings()"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>保存设置</button></div>
+    </div>
+    <aside class="page-surface settings-help" aria-labelledby="settings-help-title">
+      <div class="panel-heading"><span class="provider-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span><div><span class="eyebrow">CREDENTIAL GUIDE</span><h3 id="settings-help-title">密钥管理</h3></div></div>
+      <ol class="settings-guide"><li><strong>留空即保留</strong><p>无需重新填写已经保存的 Key。</p></li><li><strong>输入即可替换</strong><p>填入新 Key 后点击保存设置。</p></li><li><strong>清除需确认</strong><p>勾选对应服务的清除选项，再保存。</p></li></ol>
+      <div class="surface-note"><svg class="icon" aria-hidden="true"><use href="#i-tools"></use></svg><span>安装 AI 工具时，会使用这里保存的对应服务 Key。</span></div>
+      <p class="hint">密钥不会回填到页面，请妥善保存自己的凭据副本。</p>
+    </aside>
+  </div>
+</section>
+</main>
+
+<div class="mask" id="add-mask" role="dialog" aria-modal="true" aria-labelledby="add-title" aria-describedby="add-description">
+  <div class="dialog connection-dialog">
+    <div class="dialog-header"><div><span class="eyebrow">NEW CONNECTION</span><h3 id="add-title">添加服务器</h3></div><button type="button" class="icon-btn" aria-label="关闭添加服务器窗口" title="关闭" onclick="hideAdd()"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg></button></div>
+    <p class="dialog-description" id="add-description">建立 SSH 连接，将服务器加入你的工作空间。</p>
+    <div class="dialog-body">
+      <div class="form-field"><label class="nlabel" for="a-name">服务器名称 · 可选</label><input class="ninput" id="a-name" type="text" placeholder="如：新加坡 VPS" autocomplete="off"></div>
+      <div class="nrow"><div class="form-field"><label class="nlabel" for="a-host">服务器地址 *</label><input class="ninput" id="a-host" type="text" placeholder="IP 地址或域名" autocomplete="off"></div><div class="form-field field-short"><label class="nlabel" for="a-port">SSH 端口</label><input class="ninput" id="a-port" type="text" value="22" inputmode="numeric"></div></div>
+<div class="form-field auth-choice"><label class="nlabel" for="a-auth">SSH 登录方式</label><select class="nselect" id="a-auth" onchange="authTypeChanged('a')"><option value="password">密码登录</option><option value="private_key">SSH 私钥</option><option value="agent">本机 SSH Agent</option></select></div>
+<div class="auth-key-fields" id="a-key-fields" hidden><div class="form-field"><label class="nlabel" for="a-key">私钥内容</label><textarea class="ninput private-key-input" id="a-key" rows="4" placeholder="粘贴 PEM / OpenSSH 私钥，或选择本机文件" autocomplete="off" spellcheck="false"></textarea></div><div class="nrow"><div class="form-field"><label class="nlabel" for="a-key-file">从本机选择私钥 · 最大 128 KiB</label><input class="key-file-input" id="a-key-file" type="file" onchange="readPrivateKey('a',this)"></div><div class="form-field"><label class="nlabel" for="a-passphrase">私钥口令 · 可选</label><input class="ninput" id="a-passphrase" type="password" autocomplete="off" placeholder="私钥已加密时填写"></div></div><p class="hint">文件仅在本机读取并传给本地面板，不会上传外网；操作成功或关闭表单后清除输入。</p></div>
+<p class="hint auth-agent-hint" id="a-agent-hint" hidden>使用当前系统的 SSH Agent。请先加载密钥；不支持时可改为私钥登录。</p>
+      <div class="nrow"><div class="form-field"><label class="nlabel" for="a-user">SSH 用户名</label><input class="ninput" id="a-user" type="text" value="root" autocomplete="off"></div><div class="form-field" id="a-password-field"><label class="nlabel" for="a-pass">SSH 密码 *</label><input class="ninput" id="a-pass" type="password" placeholder="填写 SSH 密码" autocomplete="off"></div></div>
+      <div class="surface-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span>连接信息保存在本机工作空间，保存后将测试 SSH 连接。</span></div>
+    </div>
+    <div class="dialog-footer"><button type="button" class="btn btn-g" onclick="hideAdd()">取消</button><button type="button" class="btn btn-p" id="add-save" onclick="addServer()"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>保存并连接</button></div>
+  </div>
+</div>
+<div class="mask" id="pv-mask" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+  <div class="dialog preview-dialog">
+    <div class="dialog-header"><div><span class="eyebrow">REMOTE FILE PREVIEW</span><h3 id="preview-title">文件预览</h3></div><button type="button" class="icon-btn" aria-label="关闭文件预览窗口" title="关闭" onclick="closeModal('#pv-mask')"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg></button></div>
+    <div class="dialog-body"><div class="preview-path"><span class="section-label">文件路径</span><div id="pv-title"></div></div><pre id="pv-body" tabindex="0" aria-label="文件内容">加载中…</pre></div>
+    <div class="dialog-footer"><button type="button" class="btn btn-g" onclick="closeModal('#pv-mask')">关闭</button><button type="button" class="btn btn-p" id="pv-dl"><svg class="icon" aria-hidden="true"><use href="#i-download"></use></svg>下载此文件</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/static/vendor/xterm-5.3.0.min.js"></script>
+<script src="/static/vendor/xterm-addon-fit-0.8.0.min.js"></script>
+<script src="/static/vendor/qrcode-1.0.0.min.js"></script>
+<script src="/static/network-scene.js"></script>
+<script src="/static/product-ui.js"></script>
+<script src="/static/clash-workspace.js"></script>
+<script>
+const CSRF_TOKEN = {{ csrf_token|tojson }};
+let cur = null, term = null, fitAddon = null, ws = null, pollTimer = null;
+let serverVersion = 0, serversVersion = 0, dashVersion = 0, fileVersion = 0, searchVersion = 0, previewVersion = 0;
+let toastTimer = null;
+const $ = s => document.querySelector(s);
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const busy = new Set();
+let fleet=[], scene=null, toolCategory='all', editingServer=null;
+let capabilityState=null, capabilityRequest=0;
+const connectionStates=new Map();
+const connectionRequests=new Map();
+const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${esc(name)}"></use></svg>`;
+function updateNetworkUI(){
+  $('#fleet-count').textContent=String(fleet.length);
+  $('#summary-servers').innerHTML=`${fleet.length} <small>台</small>`;
+  const visibleLimit=window.NetworkScene?.MAX_NODES||24;
+  $('#scene-count').textContent=fleet.length>visibleLimit?`${visibleLimit} / ${fleet.length} 可视节点`:`${fleet.length} 个服务器节点`;
+  const verified=fleet.filter(s=>connectionStates.get(String(s.id))==='connected').length;
+  $('#summary-verified').innerHTML=`${verified} <small>台</small>`;$('#fleet-status').textContent=`${verified} 台连接已验证`;
+  $('#scene-caption').textContent=fleet.length>visibleLimit?`当前展示 ${visibleLimit} 台，其余服务器可从列表选择`:fleet.length?'选择节点，打开服务器工作空间':'添加服务器，开启你的网络';
+  const state=cur ? connectionStates.get(String(cur.id)) : null;
+  $('#summary-connection').textContent=state==='connected'?'验证通过':state==='pending'?'测试中':state==='error'?'连接失败':cur?'待验证':'未选择';
+  $('#summary-jobs').innerHTML=`${Number(busy.has('tool-job'))+Number(busy.has('node-job'))} <small>项</small>`;
+  $('#summary-currentname').textContent=cur?cur.name:'选择一台服务器';
+  $('#inspector-name').textContent=cur?cur.name:'尚未选择节点';
+  $('#inspector-host').textContent=cur?cur.host:'—';$('#inspector-port').textContent=cur?String(cur.port):'—';$('#inspector-user').textContent=cur?cur.user:'—';
+  $('#inspector-state').textContent=state==='connected'?'SSH 验证通过':state==='pending'?'正在测试连接':state==='error'?'连接测试失败':cur?'待验证':'等待选择';
+  $('#inspector-state').setAttribute('data-status',state||'unchecked');
+  ['#inspector-terminal','#inspector-files','#inspector-connect','#inspector-delete'].forEach(selector=>$(selector).disabled=!cur||(selector==='#inspector-connect'&&state==='pending'));
+  $('#server-edit').disabled=!cur;$('#server-auth-summary').textContent=cur?(cur.credential_required?'需要补充登录凭据 · 点击编辑连接':({password:'密码登录',private_key:'SSH 私钥登录',agent:'本机 SSH Agent 登录'}[cur.auth_type||'password']||'SSH 登录')):'选择服务器查看登录方式';
+  if($('#term-target'))$('#term-target').textContent=cur?`${cur.user}@${cur.host}`:'未选择服务器';
+  if($('#term-session-meta'))$('#term-session-meta').textContent=cur?`SSH :${cur.port} · 交互会话`:'SSH · 交互会话';
+}
+function markConnection(id,status){
+  connectionStates.set(String(id),status); if(scene)scene.setConnection(id,status);
+  document.querySelectorAll('.server-indicator').forEach(el=>{if(el.dataset.serverId===String(id))el.setAttribute('data-status',status);});updateNetworkUI();
+}
+function initNetworkScene(){
+  if(!window.NetworkScene) return;
+  try{
+    scene=window.NetworkScene.init({canvas:$('#network-canvas'),onSelect:id=>{const server=fleet.find(s=>String(s.id)===String(id));if(server)select(server);}});
+    $('#scene-reset').onclick=()=>scene.resetView();
+    $('#scene-zoom-in').onclick=()=>scene.zoomIn();
+    $('#scene-zoom-out').onclick=()=>scene.zoomOut();
+    $('#scene-motion').onclick=()=>{const moving=scene.toggleMotion();const button=$('#scene-motion');button.setAttribute('aria-pressed',String(!moving));button.setAttribute('aria-label',moving?'暂停网络动画':'播放网络动画');button.title=moving?'暂停动画':'播放动画';button.innerHTML=icon(moving?'pause':'play');};
+    scene.setServers(fleet);scene.setSelected(cur?cur.id:null);
+  }catch(e){$('#scene-caption').textContent='3D 视图暂不可用，请使用服务器列表';}
+}
+function toast(msg, ok=true){
+  const t=$('#toast'); t.textContent=String(msg || '操作未完成');
+  t.setAttribute('data-tone',ok?'success':'error'); t.style.display='block';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.style.display='none',4000);
+}
+function errorMessage(data, fallback){
+  return data && (typeof data.msg==='string' ? data.msg : typeof data.error==='string' ? data.error : Array.isArray(data.errs) ? data.errs.join('；') : '') || fallback;
+}
+async function apiResponse(url, options={}){
+  const headers=new Headers(options.headers || {}); headers.set('X-CSRF-Token',CSRF_TOKEN);
+  let response;
+  try{ response=await fetch(url,{...options,headers,credentials:'same-origin'}); }
+  catch(e){ throw new Error('无法连接面板服务，请检查服务是否仍在运行'); }
+  if(!response.ok){
+    let data; try{ data=await response.json(); }catch(e){}
+    throw new Error(errorMessage(data,`请求失败（HTTP ${response.status}）`));
+  }
+  return response;
+}
+async function api(url, options={}){
+  const response=await apiResponse(url,options);
+  let data; try{ data=await response.json(); }catch(e){ throw new Error('接口返回格式错误，请重新启动面板服务'); }
+  if(data && data.ok===false) throw new Error(errorMessage(data,'操作失败'));
+  return data;
+}
+const jsonPost = data => ({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+function setBusy(key, selector, value){
+  if(value) busy.add(key); else busy.delete(key);
+  document.querySelectorAll(selector).forEach(el=>{
+    if(value){el.dataset.busyWasDisabled=String(Boolean(el.disabled));el.disabled=true;}
+    else{el.disabled=el.dataset.busyWasDisabled==='true';delete el.dataset.busyWasDisabled;}
+    el.classList.toggle('busy',value); el.setAttribute('aria-disabled',String(Boolean(el.disabled)));
+  });
+  updateNetworkUI();
+  if(key==='tool-job'&&!value)renderTools();
+}
+async function action(key, selector, task){
+  if(busy.has(key)) return toast('操作正在进行，请等待完成',false);
+  setBusy(key,selector,true);
+  try{ return await task(); }catch(e){ toast(e.message,false); }
+  finally{ setBusy(key,selector,false); }
+}
+const isCurrent = (id, version) => cur && String(cur.id)===String(id) && serverVersion===version;
+
+// 服务器切换时立即关闭旧连接，并废弃旧请求的回包。
+function resetServerView(){
+  serverVersion++; dashVersion++; fileVersion++; searchVersion++; previewVersion++;
+  capabilityRequest++;capabilityState=null;renderCapabilities();renderTools();
+  clearManualInputs();
+  closeTerm(); fpath='/root';
+  closeModal('#pv-mask'); $('#pv-dl').onclick=null;
+  $('#dash-updated').textContent='等待读取资源快照';
+  $('#dash-content').innerHTML='<div class="empty dashboard-empty"><div class="empty-symbol">'+icon('server')+'</div><div><strong>选择节点，查看系统资源</strong><p>资源与工具信息将在连接验证后显示。</p></div></div>';
+  $('#fbody').innerHTML='<tr><td colspan="3" class="empty">先选择一台服务器</td></tr>';
+  $('#crumbs').replaceChildren(); $('#search-results').style.display='none';
+  invalidateNodeList();
+  if(scene)scene.setSelected(null);updateNetworkUI();
+}
+async function loadServers(){
+  const version=++serversVersion;
+  const list=await api('/api/servers');
+  if(!Array.isArray(list)) throw new Error('服务器列表返回格式错误');
+  if(version!==serversVersion) return list;
+  if(cur && !list.some(s=>String(s.id)===String(cur.id))){ cur=null; resetServerView(); $('#cur-name').textContent='网络工作空间'; }
+  if(cur)cur=list.find(s=>String(s.id)===String(cur.id))||cur;
+  fleet=list;if(scene)scene.setServers(fleet);updateNetworkUI();renderServerList();window.ClashWorkspace?.setServers(fleet);
+  return list;
+}
+function renderServerList(){
+  const keyword=($('#server-filter').value||'').trim().toLowerCase();
+  const list=fleet.filter(s=>`${s.name} ${s.host} ${s.user}`.toLowerCase().includes(keyword));
+  const box=$('#server-list'); box.replaceChildren();
+  if(!list.length){ const empty=document.createElement('div'); empty.className='empty'; empty.textContent=fleet.length?'没有匹配的服务器':'还没有服务器，点击下方添加'; box.appendChild(empty); }
+  list.forEach(s=>{
+    const d=document.createElement('button');d.type='button';d.setAttribute('aria-pressed',String(Boolean(cur&&String(cur.id)===String(s.id))));d.setAttribute('title',s.name+' · '+s.host+'（右键删除）');d.className='srv'+(cur&&String(cur.id)===String(s.id)?' active':'');
+    d.innerHTML=`<span class="server-glyph">${icon("server")}</span><span class="server-copy"><span class="name">${esc(s.name)}</span><span class="host">${esc(s.host)} · :${esc(s.port)}</span></span><span class="server-indicator" data-server-id="${esc(s.id)}" data-status="${esc(connectionStates.get(String(s.id))||"unchecked")}"></span>`;
+    d.onclick=()=>select(s);
+    d.oncontextmenu=e=>{ e.preventDefault(); if(confirm(`删除服务器 ${s.name}？`)) delServer(s.id); };
+    box.appendChild(d);
+  });
+}
+async function refreshWorkspace(){
+  return action('workspace-refresh','#dashboard-refresh',async()=>{await loadServers();if(cur)await loadDash();else toast('服务器列表已刷新');});
+}
+function removeSelectedServer(){if(cur&&confirm(`删除服务器 ${cur.name}？`))delServer(cur.id);}
+async function delServer(id){
+  return action('server-delete','#server-list .srv',async()=>{
+    await api('/api/servers/'+encodeURIComponent(id),{method:'DELETE'});
+    if(cur && String(cur.id)===String(id)){ cur=null; resetServerView(); $('#cur-name').textContent='网络工作空间'; }
+    invalidateNodeList(); const list=await loadServers(); await initNode(list); toast('服务器已删除');
+  });
+}
+let activeModal=null, modalReturnFocus=null;
+function showModal(selector,focusSelector){
+  if(activeModal)closeModal();
+  activeModal=$(selector);modalReturnFocus=document.activeElement;
+  activeModal.classList.add('show');$('#main').inert=true;$('#sidebar').inert=true;
+  $(focusSelector).focus?.();
+}
+function closeModal(selector){
+  const mask=selector?$(selector):activeModal;if(!mask)return;
+  if(mask.id==='add-mask'||mask===$('#add-mask'))clearAuthInputs('a');
+  window.ProductUI?.onModalClose(mask.id);
+  mask.classList.remove('show');if(mask!==activeModal)return;
+  activeModal=null;$('#main').inert=false;$('#sidebar').inert=false;
+  const target=modalReturnFocus?.isConnected===false?$('#add-btn'):modalReturnFocus;
+  modalReturnFocus=null;target?.focus?.();
+}
+function showAdd(){editingServer=null;$('#add-title').textContent='添加服务器';$('#add-save').innerHTML=icon('plus')+'保存并连接';$('#add-description').textContent='建立 SSH 连接，将服务器加入你的工作空间。';$('#a-name').value='';$('#a-host').value='';$('#a-port').value='22';$('#a-user').value='root';clearAuthInputs('a');$('#a-auth').value='password';authTypeChanged('a',false);showModal('#add-mask','#a-name');}
+function editServer(server=cur){if(!server)return;editingServer={...server};$('#add-title').textContent='编辑服务器';$('#add-save').innerHTML=icon('check')+'保存并验证';$('#add-description').textContent=server.credential_required?'补充此服务器的登录凭据，保存后验证连接。':'更新连接信息；保持登录方式时，敏感字段留空可保留已保存凭据。';$('#a-name').value=server.name;$('#a-host').value=server.host;$('#a-port').value=String(server.port);$('#a-user').value=server.user;clearAuthInputs('a');$('#a-auth').value=server.auth_type||'password';authTypeChanged('a',false);showModal('#add-mask','#a-host');}
+function hideAdd(){closeModal('#add-mask');}
+const PRIVATE_KEY_LIMIT=128*1024;
+const authReadEpoch=new Map();
+function authPayload(prefix){const type=$('#'+prefix+'-auth')?.value||'password';return type==='private_key'?{auth_type:type,private_key:$('#'+prefix+'-key').value,key_passphrase:$('#'+prefix+'-passphrase').value}:type==='agent'?{auth_type:type}:{auth_type:'password',password:$('#'+prefix+'-pass').value};}
+function authValidation(body,allowEmpty=false){if(!['password','private_key','agent'].includes(body.auth_type||'password'))return '登录方式无效';if(body.auth_type==='agent')return '';if(body.auth_type==='private_key'){if(new TextEncoder().encode(body.private_key||'').length>PRIVATE_KEY_LIMIT)return '私钥文件或内容不能超过 128 KiB';return !allowEmpty&&!String(body.private_key||'').trim()?'请粘贴或选择 SSH 私钥':'';}return !allowEmpty&&!body.password?'请填写 SSH 密码':'';}
+function clearAuthInputs(prefix){authReadEpoch.set(prefix,(authReadEpoch.get(prefix)||0)+1);['pass','key','passphrase','key-file'].forEach(suffix=>{const field=$('#'+prefix+'-'+suffix);if(field)field.value='';});}
+function clearManualInputs(){['nm-d','nm-e','nm-x','nlm'].forEach(clearAuthInputs);}
+function authTypeChanged(prefix,clear=true){if(clear)clearAuthInputs(prefix);const type=$('#'+prefix+'-auth').value||'password';$('#'+prefix+'-password-field').hidden=type!=='password';$('#'+prefix+'-key-fields').hidden=type!=='private_key';$('#'+prefix+'-agent-hint').hidden=type!=='agent';if(prefix==='nlm')invalidateNodeList();}
+async function readPrivateKey(prefix,input){const file=input.files?.[0],epoch=authReadEpoch.get(prefix)||0;if(!file)return;try{if(file.size>PRIVATE_KEY_LIMIT)throw new Error('私钥文件不能超过 128 KiB');const text=await file.text();if((authReadEpoch.get(prefix)||0)!==epoch||$('#'+prefix+'-auth').value!=='private_key')return;if(new TextEncoder().encode(text).length>PRIVATE_KEY_LIMIT)throw new Error('私钥内容不能超过 128 KiB');$('#'+prefix+'-key').value=text;if(prefix==='nlm')invalidateNodeList();toast('私钥已在本机读取');}catch(e){if((authReadEpoch.get(prefix)||0)===epoch){$('#'+prefix+'-key').value='';toast(e.message,false);}}finally{input.value='';}}
+function renderCapabilities(){const box=$('#capabilities-banner');if(!box)return;const state=capabilityState;if(!cur||!state){box.innerHTML='<span class="section-label">服务器兼容性</span><p>选择并验证服务器后，读取操作系统与工具支持情况。</p>';return;}if(state.status==='loading'){box.innerHTML='<span class="section-label">服务器兼容性</span><p>正在检查操作系统、权限与可用工具…</p>';return;}if(state.status==='error'){box.innerHTML='<span class="section-label">兼容性尚未确认</span><p>'+esc(state.error)+'</p><button class="btn btn-g" type="button" onclick="if(cur)loadCapabilities(cur.id,serverVersion)">重新检查兼容性</button>';return;}const c=state.data;box.innerHTML='<span class="section-label">服务器兼容性</span><div class="compatibility-details"><strong>'+esc(c.os||c.distro||'未知系统')+'</strong><span>'+esc(c.arch||'未知架构')+'</span><span>'+esc(c.user||'未知用户')+' · '+(c.is_root?'root 权限':c.has_sudo?'可用 sudo':'普通用户')+'</span><span>'+(c.has_apt?'apt 可用':'无 apt')+'</span></div><p>下方工具按当前服务器支持情况显示；不可用项目会说明原因。</p>';}
+async function loadCapabilities(id,version=serverVersion){const request=++capabilityRequest;capabilityState={serverId:String(id),status:'loading'};renderCapabilities();renderTools();try{const data=await api('/api/servers/'+encodeURIComponent(id)+'/capabilities');if(!isCurrent(id,version)||request!==capabilityRequest)return;capabilityState={serverId:String(id),status:'ready',data};}catch(e){if(!isCurrent(id,version)||request!==capabilityRequest)return;capabilityState={serverId:String(id),status:'error',error:e.message};}renderCapabilities();renderTools();}
+function toolCapability(action){if(!cur||!capabilityState||capabilityState.serverId!==String(cur.id))return null;if(capabilityState.status==='loading')return {available:false,reason:'正在检查服务器兼容性'};if(capabilityState.status==='error')return action==='check_env'?null:{available:false,reason:'兼容性尚未确认，请先重新检查'};return capabilityState.data.tools?.[action]||null;}
+window.addEventListener('keydown',e=>{
+  if(!activeModal)return;
+  if(e.key==='Escape'){e.preventDefault();closeModal();return;}
+  if(e.key!=='Tab')return;
+  const fields=[...activeModal.querySelectorAll('button,input,select,textarea,a[href],[tabindex]')].filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length);
+  if(!fields.length){e.preventDefault();return;}
+  const first=fields[0],last=fields[fields.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+});
+document.querySelectorAll('.mask').forEach(mask=>mask.addEventListener('click',e=>{if(e.target===mask)closeModal('#'+mask.id);}));
+async function addServer(){
+  const body={name:$('#a-name').value.trim(),host:$('#a-host').value.trim(),port:$('#a-port').value,user:$('#a-user').value.trim(),...authPayload('a')};
+  const editing=editingServer,canRetain=editing&&!editing.credential_required&&(editing.auth_type||'password')===body.auth_type;
+  const authError=authValidation(body,Boolean(canRetain));if(!body.host||authError)return toast(authError||'请填写服务器地址',false);
+  return action('server-add','#add-save',async()=>{
+    const result=await api(editing?'/api/servers/'+encodeURIComponent(editing.id):'/api/servers',{...jsonPost(body),method:editing?'PUT':'POST'});
+    clearAuthInputs('a');
+    const list=await loadServers(); await initNode(list);
+    const saved=list.find(s=>String(s.id)===String(result.id||editing?.id));
+    if(!saved) throw new Error('已保存，但未能读取新增服务器，请刷新列表');
+    hideAdd();editingServer=null;await select(saved);
+  });
+}
+async function select(s){
+  resetServerView(); cur=s;if(scene)scene.setSelected(s.id);markConnection(s.id,'pending');
+  const connectionRequest=Symbol();connectionRequests.set(String(s.id),connectionRequest);
+  const version=serverVersion; $('#cur-name').textContent=s.name+' ('+s.host+')';
+  $('#dash-content').innerHTML='<div class="empty loading-state"><span class="loading-orbit"></span><strong>正在验证 SSH 连接</strong><p>连接成功后读取服务器资源。</p></div>';
+  document.querySelectorAll('#server-list .srv').forEach(el=>el.classList.remove('active'));
+  try{
+    await loadServers();
+    if(!isCurrent(s.id,version)) return;
+    await window.ProductUI?.ensureServerIdentity(s.id);
+    if(!isCurrent(s.id,version))return;
+    const r=await api(`/api/servers/${encodeURIComponent(s.id)}/test`,{method:'POST'});
+    if(connectionRequests.get(String(s.id))===connectionRequest)markConnection(s.id,'connected');
+    if(!isCurrent(s.id,version)) return;
+    toast(r.msg || '连接成功');loadCapabilities(s.id,version);await loadDash();
+    if(!isCurrent(s.id,version)) return;
+    if($('#p-term').classList.contains('active')) openTerm();
+    if($('#p-file').classList.contains('active')) initFile();
+  }catch(e){
+    if(connectionRequests.get(String(s.id))===connectionRequest)markConnection(s.id,e.code==='IDENTITY_PENDING'?'unchecked':'error');
+    if(isCurrent(s.id,version)){ $('#dash-content').innerHTML=`<div class="empty">连接失败：${esc(e.message)}</div>`; toast(e.message,false); }
+  }
+}
+async function loadDash(){
+  if(!cur) return;
+  const id=cur.id, version=serverVersion, request=++dashVersion;
+  $('#dash-content').innerHTML='<div class="empty loading-state"><span class="loading-orbit"></span><strong>正在读取系统资源</strong><p>正在获取系统与工具快照。</p></div>';
+  try{
+    const d=await api(`/api/servers/${encodeURIComponent(id)}/info`);
+    if(!isCurrent(id,version)||request!==dashVersion) return;
+    const entries=Object.entries(d.tools||{}), installed=entries.filter(([,v])=>v).length;
+    const tb=entries.map(([k,v])=>`<div class="installed-item"><span class="installed-icon">${icon(v?'check':'plus')}</span><div><strong>${esc(k)}</strong><span>${v?esc(v):'尚未安装'}</span></div><span class="badge ${v?'ok':'no'}">${v?'已安装':'未安装'}</span></div>`).join('');
+    const percentage=value=>{const m=String(value??'').match(/(\d+(?:\.\d+)?)\s*%/);return m?Math.min(100,Math.max(0,Number(m[1]))):null;};
+    const resource=(glyph,label,value)=>{const amount=percentage(value);return `<article class="card metric-card"><div class="metric-heading"><span>${icon(glyph)}${label}</span>${amount===null?'':`<strong>${amount}%</strong>`}</div><div class="metric-value">${esc(value||'暂无数据')}</div>${amount===null?'<div class="metric-divider"></div>':`<meter min="0" max="100" value="${amount}" aria-label="${label}使用率">${amount}%</meter>`}<span class="metric-caption">本次读取的系统快照</span></article>`;};
+    $('#dash-updated').textContent='快照更新于 '+new Date().toLocaleTimeString('zh-CN',{hour12:false});
+    $('#dash-content').innerHTML=`
+      <div class="page-heading resource-heading"><div><span class="eyebrow">RESOURCE SNAPSHOT</span><h2>系统资源</h2></div><span class="panel-chip">${icon('clock')}手动刷新快照</span></div>
+      <div class="resource-grid">${resource('cpu','CPU / 平均负载',`${d.cpu||'—'} · ${d.load||'—'}`)}${resource('memory','内存',d.mem)}${resource('disk','磁盘',d.disk)}</div>
+      <div class="system-grid"><article class="card system-card"><div class="panel-heading"><h3>${icon('server')}系统信息</h3><span class="section-label">HOST SYSTEM</span></div><dl class="system-details"><div><dt>操作系统</dt><dd>${esc(d.os||'—')}</dd></div><div><dt>内核版本</dt><dd>${esc(d.kernel||'—')}</dd></div><div><dt>运行时长</dt><dd>${esc(d.uptime||'—')}</dd></div><div><dt>TCP 拥塞控制</dt><dd>${esc(d.bbr||'—')} ${d.bbr==='bbr'?'<span class="badge ok">BBR 已启用</span>':''}</dd></div></dl></article><article class="card installed-card"><div class="panel-heading"><h3>${icon('code')}已安装工具</h3><span class="panel-chip">${installed} / ${entries.length}</span></div><div class="installed-grid">${tb||'<p class="hint">暂无工具信息</p>'}</div></article></div>
+      <div class="card quick-actions"><div><h3>快捷操作</h3><p>连接当前服务器的常用工作环境。</p></div><div class="quick-action-buttons"><button class="btn btn-g" data-quick="dsh" onclick="openDsh()">${icon('code')}dsh 网页</button><button class="btn btn-g" data-quick="rdp" onclick="openRdp()">${icon('desktop')}远程桌面</button><button class="btn btn-g danger" data-quick="logout" onclick="rdpLogout()">注销桌面</button><button class="btn btn-g" onclick="goTab('term')">${icon('terminal')}终端</button><button class="btn btn-g" onclick="goTab('file')">${icon('folder')}文件</button></div></div>`;
+  }catch(e){ if(isCurrent(id,version)&&request===dashVersion){ $('#dash-content').innerHTML=`<div class="empty">${esc(e.message)}</div>`; toast(e.message,false); } }
+}
+
+// 终端的旧 WebSocket 回调不能读写新服务器的终端。
+let termSid=null, termDisp=[], reconnectTimer=null, fitTimer=null;
+function terminalStatus(message,state){$('#term-status').textContent=message;$('#term-status').parentElement?.setAttribute('data-status',state);}
+function closeTerm(){
+  clearTimeout(reconnectTimer); reconnectTimer=null; clearTimeout(fitTimer); fitTimer=null;
+  const old=ws; ws=null; termSid=null;
+  if(old){ old.onopen=old.onmessage=old.onclose=old.onerror=null; try{ old.close(); }catch(e){} }
+  termDisp.forEach(d=>{try{d.dispose();}catch(e){}}); termDisp=[];
+  if(term) term.reset(); terminalStatus('连接已关闭','closed');
+}
+function openTerm(manual){
+  if(!cur){ terminalStatus('先选择一台服务器','closed'); return; }
+  if(!manual && ws && termSid===cur.id && (ws.readyState===0 || ws.readyState===1)) return;
+  closeTerm(); const server={...cur}, version=serverVersion;
+  try{
+    if(!term){
+      term=new Terminal({cursorBlink:true,fontSize:14,fontFamily:'Consolas, monospace',theme:{background:'#0a1220',foreground:'#dce8f8',cursor:'#65dfcf',selectionBackground:'#25495e',black:'#0a1220',brightBlack:'#71859e',green:'#65dfcf',cyan:'#79cdf0'}});
+      fitAddon=new FitAddon.FitAddon(); term.loadAddon(fitAddon); term.open($('#terminal'));
+    }
+    fitAddon.fit(); term.reset(); termSid=server.id;
+    terminalStatus('正在连接 '+server.host+' ...','pending');
+    const proto=location.protocol==='https:'?'wss':'ws';
+    const myWs=new WebSocket(`${proto}://${location.host}/ws/terminal/${encodeURIComponent(server.id)}?token=${encodeURIComponent(CSRF_TOKEN)}`); ws=myWs;
+    const active=()=>ws===myWs && isCurrent(server.id,version);
+    myWs.onopen=()=>{ if(active()){ terminalStatus('已连接 '+server.host,'connected'); myWs.send(JSON.stringify({type:'resize',cols:term.cols,rows:term.rows})); } };
+    myWs.onmessage=e=>{ if(active()) term.write(e.data); };
+    myWs.onclose=()=>{
+      if(!active()) return;
+      terminalStatus('连接已断开','closed'); term.writeln('\r\n\x1b[33m[连接已断开，2 秒后自动重连]\x1b[0m');
+      reconnectTimer=setTimeout(()=>{ if(active()&&$('#p-term').classList.contains('active')) openTerm(true); },2000);
+    };
+    myWs.onerror=()=>{ if(active()) terminalStatus('终端连接失败，请检查面板和服务器连接','error'); };
+    termDisp.push(term.onData(d=>{ if(active()&&myWs.readyState===1) myWs.send(JSON.stringify({type:'input',data:d})); }));
+    termDisp.push(term.onResize(({cols,rows})=>{ if(active()&&myWs.readyState===1) myWs.send(JSON.stringify({type:'resize',cols,rows})); }));
+    fitTimer=setTimeout(()=>{ if(active()) fitAddon.fit(); },200);
+  }catch(e){ closeTerm(); toast('终端组件未能启动：'+e.message,false); }
+}
+
+const TOOLS=[
+  {a:'check_env',g:'system',i:'activity',t:'环境体检',d:'查看系统版本、架构、CPU、内存、磁盘'},
+  {a:'enable_bbr',g:'network',i:'network',t:'开启 BBR 加速',d:'优化 TCP 拥塞控制和缓冲区'},
+  {a:'install_node',g:'system',i:'code',t:'安装 Node.js 22',d:'AI 命令行工具的运行基础'},
+  {a:'install_dsh',g:'ai',i:'terminal',t:'安装 DeepSeek Harness',d:'安装命令行工具，使用设置页保存的 DeepSeek Key'},
+  {a:'install_claude',g:'ai',i:'code',t:'安装 Claude Code',d:'使用设置页保存的 Anthropic Key 或首次登录'},
+  {a:'install_codex',g:'ai',i:'terminal',t:'安装 Codex CLI',d:'使用设置页保存的 OpenAI Key 或首次登录'},
+  {a:'install_xray',g:'network',i:'shield',t:'安装 Xray Reality 节点',d:'增量添加 Reality 节点，自动备份并验证配置'},
+  {a:'install_desktop',g:'desktop',i:'desktop',t:'安装远程桌面',d:'XFCE 桌面、浏览器和 Swap，使用 Windows 远程桌面连接'},
+];
+function renderTools(){
+  const box=$('#tools');box.replaceChildren();
+  const keyword=($('#tool-filter').value||'').trim().toLowerCase();
+  const shown=TOOLS.filter(x=>(toolCategory==='all'||x.g===toolCategory)&&`${x.t} ${x.d}`.toLowerCase().includes(keyword));
+  const names={system:'系统环境',ai:'AI 工具',network:'网络节点',desktop:'远程桌面'},tones={system:'blue',ai:'violet',network:'cyan',desktop:'blue'};
+  shown.forEach(x=>{const button=document.createElement('button');button.type='button';button.className='tool';button.dataset.toolCategory=x.g;button.dataset.tone=tones[x.g];
+    const support=toolCapability(x.a),unavailable=support?.available===false;button.dataset.toolAction=x.a;
+    button.innerHTML=`<div class="tool-top"><span class="tool-icon">${icon(x.i)}</span><span class="tool-category">${names[x.g]}</span></div><div class="t">${esc(x.t)}</div><div class="d">${esc(x.d)}</div>${unavailable?'<p class="tool-unavailable">'+esc(support.reason||'此服务器暂不支持')+'</p>':''}<div class="tool-footer"><span>${unavailable?'暂不可用':x.a==='check_env'?'开始检查':x.a==='enable_bbr'?'执行优化':'开始安装'}</span>${icon('arrow')}</div>`;
+    button.disabled=busy.has('tool-job')||unavailable;button.setAttribute('aria-disabled',String(button.disabled));if(busy.has('tool-job'))button.classList.add('busy');if(unavailable)button.classList.add('unavailable');button.onclick=()=>runTool(x.a);box.appendChild(button);
+  });
+  if(!shown.length){const empty=document.createElement('div');empty.className='empty tools-empty';empty.textContent='没有匹配的工具，请调整关键词或分类';box.appendChild(empty);}
+  $('#tool-count').textContent=`${shown.length} 项工具`;
+}
+function filterTools(category){toolCategory=category;document.querySelectorAll('.filter-chip').forEach(button=>{const selected=button.dataset.toolCategory===category;button.classList.toggle('active',selected);button.setAttribute('aria-pressed',String(selected));});renderTools();}
+function watchJob(id,out,onFinish){
+  const state={cancelled:false,timer:null};
+  state.cancel=()=>{state.cancelled=true;clearTimeout(state.timer);};
+  async function poll(){
+    if(state.cancelled) return;
+    try{
+      const j=await api('/api/jobs/'+encodeURIComponent(id));
+      if(state.cancelled) return;
+      out.textContent=String(j.output || ''); out.scrollTop=out.scrollHeight;
+      if(j.status!=='running'){ state.cancelled=true; onFinish(j); return; }
+      state.timer=setTimeout(poll,1000);
+    }catch(e){
+      if(state.cancelled) return;
+      out.textContent+='\n任务状态读取失败：'+e.message+'；正在重试。'; out.scrollTop=out.scrollHeight;
+      state.timer=setTimeout(poll,4000);
+    }
+  }
+  state.timer=setTimeout(poll,500); return state;
+}
+async function runTool(a){
+  if(!cur) return toast('先选择一台服务器',false);
+  const support=toolCapability(a);if(support?.available===false)return toast(support.reason||'此服务器暂不支持该工具',false);
+  if(busy.has('tool-job')) return toast('工具任务正在执行，请等待完成',false);
+  const tool=TOOLS.find(x=>x.a===a); if(!tool) return;
+  const server={...cur}, body={action:a};
+  if(a==='install_xray'){
+    const p=prompt('节点端口（默认 600）：','600'); if(p===null) return;
+    const s=prompt('伪装域名（默认 www.amazon.com）：','www.amazon.com'); if(s===null) return;
+    body.port=p; body.sni=s;
+  }
+  if(!confirm(`确定在 ${server.name} 上执行【${tool.t}】？`)) return;
+  setBusy('tool-job','#tools .tool',true);
+  const out=$('#job-out'); out.style.display='block'; out.textContent='提交任务到 '+server.host+' ...';
+  try{
+    const r=await api(`/api/servers/${encodeURIComponent(server.id)}/run`,jsonPost(body));
+    if(!r.job) throw new Error('接口未返回任务编号');
+    pollTimer=watchJob(r.job,out,j=>{setBusy('tool-job','#tools .tool',false);pollTimer=null;toast(j.status==='done'?'执行完成':'执行出错，请查看日志',j.status==='done');});
+  }catch(e){ out.textContent=e.message; toast(e.message,false); setBusy('tool-job','#tools .tool',false); }
+}
+
+let nodeServers=[], nodeProtos={}, nodePoll=null, nodeInitVersion=0, nodeListVersion=0, nodeListSnapshot=null, nodeResultSnapshot=null;
+const clashBlobUrls=new Set();
+function nodeIdentity(server){ return JSON.stringify(server); }
+function currentNodeIdentity(){ return nodeIdentity(getSrvVal('#nl-server','nlm')); }
+function invalidateNodeList(){ nodeListVersion++; nodeListSnapshot=null; $('#nl-body').replaceChildren(); }
+async function initNode(knownServers){
+  const request=++nodeInitVersion, oldIdentity=currentNodeIdentity();
+  try{
+    const list=knownServers || await api('/api/servers');
+    if(request!==nodeInitVersion) return;
+    if(!Array.isArray(list)) throw new Error('服务器列表返回格式错误'); nodeServers=list;
+    const opts=nodeServers.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}（${esc(s.host)}）</option>`).join('')+'<option value="__manual__">✏️ 手动输入...</option>';
+    ['#n-server','#n-entry','#n-exit','#nl-server'].forEach(id=>{
+      const old=$(id).value; $(id).innerHTML=opts;
+      if(old && [...$(id).options].some(o=>o.value===old)) $(id).value=old;
+      if(!nodeServers.length) $(id).value='__manual__';
+    });
+    if(nodeServers.length>1 && $('#n-entry').value===$('#n-exit').value) $('#n-exit').value=String(nodeServers[1].id);
+    [['#n-server','#n-man-direct'],['#n-entry','#n-man-entry'],['#n-exit','#n-man-exit'],['#nl-server','#nl-man']].forEach(([id,man])=>nodeSrvSel(id,man,false));
+    if(oldIdentity!==currentNodeIdentity()) invalidateNodeList();
+  }catch(e){ if(request===nodeInitVersion) toast(e.message,false); }
+  try{
+    const meta=await api('/api/nodes/protocols'); if(request!==nodeInitVersion) return;
+    if(!meta.protocols || !Array.isArray(meta.ss_methods)) throw new Error('协议接口返回格式错误');
+    nodeProtos=meta.protocols;
+    const old=$('#n-proto').value;
+    $('#n-proto').innerHTML=Object.entries(nodeProtos).map(([k,v])=>`<option value="${esc(k)}">${esc(v.label)}</option>`).join('');
+    if(nodeProtos[old]) $('#n-proto').value=old;
+    const oldMethod=$('#n-ssmethod').value;
+    $('#n-ssmethod').innerHTML=meta.ss_methods.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join('');
+    if(meta.ss_methods.includes(oldMethod)) $('#n-ssmethod').value=oldMethod;
+    nodeProto();
+  }catch(e){ if(request===nodeInitVersion){ $('#n-proto-desc').textContent=e.message; toast(e.message,false); } }
+}
+function nodeSrvSel(selId,manId,invalidate=true){
+  $(manId).style.display=$(selId).value==='__manual__'?'':'none';
+  if($(selId).value!=='__manual__'){const prefixes={'#n-server':'nm-d','#n-entry':'nm-e','#n-exit':'nm-x','#nl-server':'nlm'};clearAuthInputs(prefixes[selId]);}
+  if(selId==='#nl-server' && invalidate) invalidateNodeList();
+}
+function getSrvVal(selId,pfx){
+  const v=$(selId).value; if(v!=='__manual__') return v;
+  return {host:$('#'+pfx+'-host').value.trim(),port:$('#'+pfx+'-port').value.trim()||22,user:$('#'+pfx+'-user').value.trim()||'root',...authPayload(pfx)};
+}
+function manualBad(srv){return srv===null||srv===''||(typeof srv==='object'&&(!srv.host||Boolean(authValidation(srv))));}
+function nodeMode(){
+  clearManualInputs();invalidateNodeList();
+  const relay=document.querySelector('input[name=n-mode]:checked').value==='relay';
+  $('#n-box-direct').style.display=relay?'none':''; $('#n-box-relay').style.display=relay?'':'none';
+  $('#n-port-direct').style.display=relay?'none':''; $('#n-port-relay').style.display=relay?'':'none';
+}
+function nodeProto(){
+  const p=$('#n-proto').value; $('#n-proto-desc').textContent=nodeProtos[p]?nodeProtos[p].desc:'';
+  const compatibility={
+    'vless-reality':'Reality / VLESS 需要 Mihomo（Clash Meta）；旧版 Clash 不支持。请核对 Mihomo 与 Xray 版本兼容性，兼容优先可选 VMess 或普通 Shadowsocks。',
+    'vless-ws':'VLESS 需要 Mihomo（Clash Meta）；旧版 Clash 不支持。导入前请核对客户端协议支持。',
+    'vmess-ws':'VMess WebSocket 兼容较广，仍需核对所用 Clash 客户端版本。',
+    'shadowsocks':String($('#n-ssmethod').value).includes('2022')?'SS2022 需要支持所选算法的 Mihomo 版本；普通 Shadowsocks 的兼容性较广。':'普通 Shadowsocks（非 SS2022）兼容较广，仍需核对客户端支持的加密方式。'
+  };
+  $('#n-clash-compat').textContent=compatibility[p]||'Clash 配置可用性以导出卡提示与客户端支持为准。';
+  $('#n-para-reality').style.display=p==='vless-reality'?'':'none';
+  $('#n-para-ws').style.display=(p==='vless-ws'||p==='vmess-ws')?'':'none'; $('#n-para-ss').style.display=p==='shadowsocks'?'':'none';
+}
+async function nodeCheckPort(){
+  const relay=document.querySelector('input[name=n-mode]:checked').value==='relay';
+  const body=relay?{entry_id:getSrvVal('#n-entry','nm-e'),exit_id:getSrvVal('#n-exit','nm-x')}:{server_id:getSrvVal('#n-server','nm-d')};
+  if(Object.values(body).some(manualBad)) return toast('请填写手动服务器地址和所选方式的登录凭据',false);
+  const pmap=relay?{entry_id:Number($('#n-entry-port').value),exit_id:Number($('#n-exit-port').value)}:{server_id:Number($('#n-port').value)};
+  return action('check-port','[data-action="check-port"]',async()=>{
+    $('#n-port-info').textContent='正在检测端口占用...';
+    const r=await api('/api/nodes/check_port',jsonPost(body));
+    clearManualInputs();invalidateNodeList();
+    $('#n-port-info').textContent=Object.entries(r).map(([key,info])=>{
+      if(!info.ok) return '检测失败：'+(info.msg||'服务器无效');
+      const p=pmap[key], used=Array.isArray(info.used)?info.used:[];
+      return `${info.host} :${p} ${used.includes(p)?'❌ 已占用':'✅ 可用'}（已用：${used.join(', ')||'无'}）`;
+    }).join(' ｜ ') || '未检测到服务器';
+  });
+}
+async function nodeDeploy(){
+  if(busy.has('node-job')) return toast('部署任务正在执行，请等待完成',false);
+  const relay=document.querySelector('input[name=n-mode]:checked').value==='relay', proto=$('#n-proto').value;
+  if(!nodeProtos[proto]) return toast('协议尚未加载，请重新打开节点搭建页',false);
+  const body={mode:relay?'relay':'direct',protocol:proto,remark:$('#n-remark').value.trim()}, errs=[];
+  const chkPort=(v,label)=>{const n=Number(v);if(!Number.isInteger(n)||n<1||n>65535) errs.push(label+'端口无效（1-65535，建议避开 SSH 端口）');return n;};
+  if(relay){
+    body.entry_id=getSrvVal('#n-entry','nm-e'); body.exit_id=getSrvVal('#n-exit','nm-x');
+    if(manualBad(body.entry_id)||manualBad(body.exit_id)) errs.push('请填写手动服务器地址和所选方式的登录凭据');
+    else if(nodeIdentity(body.entry_id)===nodeIdentity(body.exit_id) || (typeof body.entry_id==='object'&&typeof body.exit_id==='object'&&body.entry_id.host===body.exit_id.host)) errs.push('入口与出口不能是同一台服务器');
+    body.entry_port=chkPort($('#n-entry-port').value,'入口'); body.exit_port=chkPort($('#n-exit-port').value,'出口');
+  }else{
+    body.server_id=getSrvVal('#n-server','nm-d'); if(manualBad(body.server_id)) errs.push('请填写手动服务器地址和所选方式的登录凭据'); body.port=chkPort($('#n-port').value,'');
+  }
+  const uuidValid=value=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  if(proto==='vless-reality'){
+    body.sni=$('#n-sni').value.trim(); if(!/^[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$/.test(body.sni)) errs.push('伪装网址格式不对（如 www.amazon.com）');
+    body.uuid=$('#n-uuid').value.trim();body.sid=$('#n-sid').value.trim();
+    if(body.uuid&&!uuidValid(body.uuid)) errs.push('UUID 格式不对，留空可自动生成');
+    if(body.sid&&!/^(?:[0-9a-fA-F]{2}){1,8}$/.test(body.sid)) errs.push('shortId 需为 2-16 位偶数长度十六进制');
+  }else if(proto==='shadowsocks'){
+    body.ss_method=$('#n-ssmethod').value;body.ss_password=$('#n-sspass').value.trim();
+  }else{
+    body.ws_path=$('#n-wspath').value.trim()||'/ray';if(!/^\/[a-zA-Z0-9/_-]{0,64}$/.test(body.ws_path)) errs.push('WS 路径需以 / 开头');
+    body.uuid=$('#n-uuid-ws').value.trim();if(body.uuid&&!uuidValid(body.uuid)) errs.push('UUID 格式不对，留空可自动生成');
+  }
+  if(errs.length) return toast(errs[0],false);
+  if(!confirm(`确认部署【${nodeProtos[proto].label}】？\n\n将增量追加节点，备份并验证配置，失败时自动回滚。`)){clearManualInputs();$('#n-sspass').value='';return;}
+  setBusy('node-job','#node-deploy',true);
+  const log=$('#node-log');log.style.display='block';log.textContent='提交任务...';$('#node-result').style.display='none';nodeResultSnapshot=null;
+  try{
+    const r=await api('/api/nodes/deploy',jsonPost(body));if(!r.job) throw new Error('接口未返回任务编号');
+    clearManualInputs();invalidateNodeList();$('#n-sspass').value='';
+    nodePoll=watchJob(r.job,log,j=>{
+      setBusy('node-job','#node-deploy',false);nodePoll=null;
+      if(j.status==='done'&&j.result){window.ClashWorkspace?.invalidate();showNodeResult(j.result);}
+      toast(j.status==='done'?'✅ 部署完成':'❌ 部署失败，请查看日志',j.status==='done');
+    });
+  }catch(e){log.textContent=e.message;toast(e.message,false);setBusy('node-job','#node-deploy',false);}
+}
+function validatedClashURL(value){
+  if(typeof value!=='string'||value!==value.trim()) return null;
+  try{
+    const url=new URL(value),page=new URL(location.protocol+'//'+location.host);
+    const portText=document.querySelector('meta[name="fl-loopback-port"]')?.content||'';
+    if(!/^\d{1,5}$/.test(portText)) return null;
+    const port=Number(portText),pagePort=Number(page.port||(page.protocol==='https:'?443:80));
+    if(port<1||port>65535||port!==pagePort||url.protocol!=='http:'||url.hostname!=='127.0.0.1'||Number(url.port||80)!==port) return null;
+    if(url.username||url.password||url.search||url.hash||!/^\/api\/clash-export\/[A-Za-z0-9_-]{43}\.yaml$/.test(url.pathname)||value!==url.href) return null;
+    return url.href;
+  }catch(e){return null;}
+}
+function clashConfig(data){
+  const notice=typeof data?.notice==='string'?data.notice:'当前节点未提供可用的 Clash 配置。';
+  if(data?.available!==true||typeof data.yaml!=='string'||!data.yaml.trim()||!['classic','mihomo'].includes(data.compatibility)) return {available:false,notice};
+  let filename=String(data.filename||'fl-network.yaml').split(/[\\/]/).pop().replace(/[<>:"|?*\x00-\x1f]/g,'_').trim().slice(0,110);
+  if(!filename||!/^.+\.ya?ml$/i.test(filename)||filename.startsWith('.')) filename='fl-network.yaml';
+  return {available:true,yaml:data.yaml,url:validatedClashURL(data.url),filename,compatibility:data.compatibility,notice};
+}
+function clashCardHTML(data,key){
+  const c=clashConfig(data),heading=`<div class="import-card-heading"><span class="import-card-symbol">${icon('network')}</span><div><span class="eyebrow">CLIENT CONFIG</span><h4 id="clash-title-${key}">Clash / Mihomo 配置</h4></div>${c.available?`<span class="clash-compat-badge">${c.compatibility==='mihomo'?'需 Mihomo / Meta':'VMess / 普通 SS'}</span>`:''}</div>`;
+  if(!c.available) return `<section class="clash-import-card is-unavailable" aria-labelledby="clash-title-${key}">${heading}<p class="clash-notice">${esc(c.notice)}</p></section>`;
+  return `<section class="clash-import-card" aria-labelledby="clash-title-${key}">${heading}
+    <p class="clash-compatibility">${c.compatibility==='mihomo'?'Reality / VLESS / SS2022 需支持对应协议的 Mihomo（Clash Meta）版本；旧版 Clash 不支持这些导入项。':'VMess 与普通 Shadowsocks 兼容较广，请核对客户端版本与加密方式。'}</p>
+    <p class="clash-notice">${esc(c.notice)}</p>
+    ${c.url?`<label class="clash-field-label" for="clash-url-${key}">同机 HTTP 配置 URL</label><textarea class="clash-url" id="clash-url-${key}" rows="3" readonly spellcheck="false">${esc(c.url)}</textarea>`:'<p class="clash-url-note">本机配置链接不可用，请下载 YAML 后导入。</p>'}
+    <div class="clash-actions">${c.url?`<button type="button" class="btn btn-p" data-clash-key="${key}" data-clash-action="url">${icon('code')}复制 Clash 配置链接</button>`:''}<button type="button" class="btn btn-g" data-clash-key="${key}" data-clash-action="download">${icon('download')}下载 YAML</button><button type="button" class="btn btn-g" data-clash-key="${key}" data-clash-action="yaml">${icon('file')}复制配置</button>${c.url?`<button type="button" class="btn btn-g clash-scheme-button" data-clash-key="${key}" data-clash-action="import">复制 clash:// 导入链接</button>`:''}</div>
+    <p class="clash-local-note">${icon('desktop')}当前程序运行时可在同一台电脑导入 HTTP 配置；跨设备请使用 YAML 文件。配置链接含节点凭据，请妥善保管。</p>
+    <details class="clash-yaml"><summary>查看 YAML 配置</summary><textarea readonly spellcheck="false" rows="9" aria-label="Clash YAML 配置">${esc(c.yaml)}</textarea></details>
+  </section>`;
+}
+function saveClashYaml(c){
+  const url=URL.createObjectURL(new Blob([c.yaml],{type:'application/yaml;charset=utf-8'})),link=document.createElement('a');clashBlobUrls.add(url);
+  try{link.href=url;link.download=c.filename;document.body.appendChild(link);link.click();}
+  finally{link.remove();setTimeout(()=>{URL.revokeObjectURL(url);clashBlobUrls.delete(url);},1000);}
+}
+async function clashAction(action,c,isValid){
+  if(!isValid()) return toast('节点目标已改变，请重新读取配置',false);
+  if(!c.available) return toast(c.notice||'当前配置不可用',false);
+  try{
+    if(action==='download'){saveClashYaml(c);return toast('已发起 YAML 下载');}
+    const text=action==='yaml'?c.yaml:action==='url'?c.url:action==='import'&&c.url?'clash://install-config?url='+encodeURIComponent(c.url):null;
+    if(!text) return toast('本机配置链接不可用，请下载 YAML',false);
+    await navigator.clipboard.writeText(text);toast(action==='yaml'?'配置已复制':action==='import'?'导入链接已复制，请在客户端中导入':'Clash 配置链接已复制');
+  }catch(e){toast(action==='download'?'下载失败，请复制配置并保存为 YAML':'复制失败，请手动全选复制配置',false);}
+}
+function bindClashActions(box,entries,isValid){
+  box.querySelectorAll('[data-clash-action]').forEach(button=>{const c=entries.get(button.dataset.clashKey);button.onclick=()=>clashAction(button.dataset.clashAction,c||{available:false},isValid);});
+}
+function showNodeResult(res){
+  const box=$('#node-result');box.style.display='block';
+  const snapshot={response:res};nodeResultSnapshot=snapshot;
+  const links=Array.isArray(res.links)?res.links:[],params=Object.entries(res.params || {}).map(([k,v])=>`<div class="k2">${esc(k)}</div><div class="v2">${esc(v)}</div>`).join('');
+  box.innerHTML=`<div class="node-result-heading">${icon('check')}<h3>部署完成 <span>${esc(res.server)}</span></h3></div><div class="node-import-grid"><section class="client-import-card"><div class="import-card-heading"><span class="import-card-symbol">${icon('code')}</span><div><span class="eyebrow">SHARE LINK</span><h4>V2Ray 客户端导入</h4></div></div>
+    <p class="hint">请使用兼容当前协议的客户端，复制分享链接或扫码导入。</p>
+    ${links.map((l,i)=>`<div class="linkbox" id="nl-${i}">${esc(l)}</div><div class="share-link-actions"><button type="button" class="btn btn-p" data-copy-node="${i}">${icon('code')}复制分享链接</button><div class="qrbox" id="nq-${i}"></div></div>`).join('')}${links.length?'':'<p class="hint">未返回客户端分享链接。</p>'}<div class="kv">${params}</div></section>${clashCardHTML(res.clash,'result')}</div>`;
+  box.querySelectorAll('[data-copy-node]').forEach(b=>b.onclick=()=>copyNodeLink(Number(b.dataset.copyNode),snapshot));
+  bindClashActions(box,new Map([['result',clashConfig(res.clash)]]),()=>nodeResultSnapshot===snapshot);
+  links.forEach((l,i)=>{try{new QRCode(document.getElementById('nq-'+i),{text:String(l),width:120,height:120});}catch(e){}});
+  box.scrollIntoView({behavior:'smooth'});
+}
+async function copyNodeLink(i,snapshot=nodeResultSnapshot){
+  if(!snapshot||snapshot!==nodeResultSnapshot) return toast('部署结果已改变，请使用当前结果',false);
+  const link=snapshot.response.links?.[i];if(typeof link!=='string'||!link) return toast('该节点没有客户端分享链接',false);
+  try{await navigator.clipboard.writeText(link);toast('链接已复制');}catch(e){toast('复制失败，请手动全选复制',false);}
+}
+
+async function loadNodeList(){
+  const srv=getSrvVal('#nl-server','nlm');if(manualBad(srv)) return toast('请填写手动服务器地址和所选方式的登录凭据',false);
+  return action('node-list','#node-list-load',async()=>{
+    invalidateNodeList();const request=nodeListVersion,identity=nodeIdentity(srv),box=$('#nl-body');
+    box.innerHTML='<div class="hint">正在读取...</div>';
+    try{
+      const r=await api('/api/nodes/list',jsonPost({server:srv}));window.ClashWorkspace?.invalidate();
+      if(request!==nodeListVersion||identity!==currentNodeIdentity()) return;
+      if(!Array.isArray(r.inbounds)) throw new Error('节点列表返回格式错误');
+      if(typeof srv==='object')clearAuthInputs('nlm');
+      nodeListSnapshot={response:r,server:srv,identity:currentNodeIdentity(),version:request};
+      const snapshot=nodeListSnapshot;
+      if(!r.inbounds.length){box.innerHTML=`<div class="hint">${esc(r.msg||'（这台服务器上没有节点入站）')}</div>`;return;}
+      box.innerHTML=`<div class="hint" style="margin-bottom:8px">${esc(r.host)} 共 ${r.inbounds.length} 个入站：</div>`+r.inbounds.map((n,i)=>`
+        <article class="node-inbound-card" style="margin-bottom:14px">
+          <div class="node-inbound-heading">
+            <span class="badge ok">${esc(n.kind)}</span><strong class="node-inbound-port">:${esc(n.port)}</strong>
+            <span class="node-inbound-extra">${esc(n.extra)}</span><span class="node-inbound-tag">${esc(n.tag)}</span>
+            ${n.clash?.available===true?`<button type="button" class="btn btn-g" data-route-node-list="${i}">${icon('activity')}专属分流</button>`:''}
+            <button type="button" class="btn btn-g danger" data-delete-node="${i}" ${n.tag?'':'disabled'}>${icon('trash')}删除</button>
+          </div><div class="node-import-grid node-list-imports"><section class="client-import-card"><h4 class="node-share-title">${icon('code')}V2Ray 分享链接</h4>${n.link?`<div class="linkbox" id="nlk-${i}">${esc(n.link)}</div><button type="button" class="btn btn-p" data-copy-list="${i}">${icon('code')}复制分享链接</button>`:'<p class="hint">该入站无客户端分享链接，仅用于转发或内部连接。</p>'}</section>${clashCardHTML(n.clash,'list-'+i)}</div>
+        </article>`).join('');
+      box.querySelectorAll('[data-delete-node]').forEach(b=>b.onclick=()=>delNode(Number(b.dataset.deleteNode)));
+      box.querySelectorAll('[data-route-node-list]').forEach(b=>b.onclick=()=>configureNodeRouting(Number(b.dataset.routeNodeList)));
+      box.querySelectorAll('[data-copy-list]').forEach(b=>b.onclick=()=>copyListLink(Number(b.dataset.copyList),snapshot));
+      bindClashActions(box,new Map(r.inbounds.map((n,i)=>['list-'+i,clashConfig(n.clash)])),()=>snapshot===nodeListSnapshot&&snapshot.identity===currentNodeIdentity()&&snapshot.version===nodeListVersion);
+    }catch(e){if(request===nodeListVersion&&identity===currentNodeIdentity()) box.innerHTML=`<div class="hint" style="color:#A32D2D">❌ ${esc(e.message)}</div>`;throw e;}
+  });
+}
+async function configureNodeRouting(i){
+  const snapshot=nodeListSnapshot;
+  if(!snapshot||snapshot.identity!==currentNodeIdentity()||snapshot.version!==nodeListVersion) return toast('服务器已改变，请重新读取节点列表',false);
+  const node=snapshot.response.inbounds[i];
+  if(!node||node.clash?.available!==true) return toast('此节点暂不支持专属配置导出',false);
+  const sid=typeof snapshot.server==='string'?snapshot.server:snapshot.server?.id;
+  if(!sid||!fleet.some(server=>String(server.id)===String(sid))) return toast('请先把此 SSH 目标保存到服务器列表，再设置节点专属分流',false);
+  const target={port:Number(node.port),protocol:node.protocol,name:node.tag||`${node.protocol}-${node.port}`};
+  const tab=document.querySelector('.tab[data-p="clash"]');
+  if(!tab||typeof window.ClashWorkspace?.focusRoutingNode!=='function') return toast('请从 Clash 配置页打开节点专属分流',false);
+  tab.click();
+  try{await window.ClashWorkspace.focusRoutingNode(String(sid),target);}catch(error){toast(error.message||'节点分流打开失败，请重新读取节点',false);}
+}
+async function copyListLink(i,snapshot=nodeListSnapshot){
+  if(!snapshot||snapshot!==nodeListSnapshot||snapshot.identity!==currentNodeIdentity()||snapshot.version!==nodeListVersion) return toast('服务器已改变，请重新读取节点列表',false);
+  const link=snapshot.response.inbounds[i]?.link;if(!link) return toast('该节点没有客户端分享链接',false);
+  try{await navigator.clipboard.writeText(link);toast('链接已复制');}catch(e){toast('复制失败，请手动全选复制',false);}
+}
+async function delNode(i){
+  const snapshot=nodeListSnapshot;
+  if(!snapshot||snapshot.identity!==currentNodeIdentity()||snapshot.version!==nodeListVersion) return toast('服务器已改变，请重新读取节点列表',false);
+  const n=snapshot.response.inbounds[i];if(!n||!n.tag) return toast('该节点缺少标识，不能直接删除',false);
+  if(!confirm(`确定删除节点【${n.kind} :${n.port}】（${n.tag}）？\n\n将从 ${snapshot.response.host} 的 Xray 配置中移除该入站并重启，删除前备份，失败时自动回滚。`)) return;
+  if(snapshot!==nodeListSnapshot||snapshot.identity!==currentNodeIdentity()) return toast('服务器已改变，请重新读取节点列表',false);
+  return action('node-delete','#nl-body button',async()=>{
+    const r=await api('/api/nodes/delete',jsonPost({server:snapshot.server,tag:n.tag,token:n.token}));window.ClashWorkspace?.invalidate();toast(r.msg||'节点已删除');
+    if(snapshot===nodeListSnapshot&&snapshot.identity===currentNodeIdentity()){if(typeof snapshot.server==='object'){invalidateNodeList();toast('节点已删除；再次读取手动服务器需重新输入凭据');}else await loadNodeList();}
+  });
+}
+
+const KEY_FIELDS=['deepseek','openai','anthropic'];
+async function loadSettings(){
+  try{
+    const s=await api('/api/settings');
+    KEY_FIELDS.forEach(name=>{const input=$('#k-'+name);input.value='';input.placeholder=s[name+'_key_set']?'已保存；输入新 Key 可替换（留空保留）':'尚未设置，输入 API Key';$('#ks-'+name).textContent=s[name+'_key_set']?'已设置':'未设置';$('#ks-'+name).parentElement?.setAttribute('data-status',s[name+'_key_set']?'saved':'empty');$('#kc-'+name).checked=false;});
+  }catch(e){toast(e.message,false);}
+}
+async function saveSettings(){
+  const body={clear_keys:[]};
+  for(const name of KEY_FIELDS){const key=name+'_key',value=$('#k-'+name).value.trim();if($('#kc-'+name).checked){if(value) return toast('清除和替换不能同时选择：'+name,false);body.clear_keys.push(key);}else if(value) body[key]=value;}
+  return action('settings-save','#settings-save',async()=>{await api('/api/settings',jsonPost(body));await loadSettings();toast('设置已保存');});
+}
+function goTab(p){document.querySelector(`.tab[data-p="${p}"]`).click();}
+async function openDsh(){
+  if(!cur) return toast('先选择一台服务器',false);const id=cur.id;
+  return action('open-dsh','[data-quick="dsh"]',async()=>{
+    const r=await api(`/api/servers/${encodeURIComponent(id)}/open_dsh`,{method:'POST'}),url=new URL(r.url);
+    if(!['http:','https:'].includes(url.protocol)||!['127.0.0.1','localhost','[::1]'].includes(url.hostname)) throw new Error('服务返回的隧道地址无效');
+    window.open(url.href,'_blank','noopener,noreferrer');toast('dsh 网页已在新标签打开');
+  });
+}
+async function openRdp(){
+  if(!cur) return toast('先选择一台服务器',false);const id=cur.id;
+  return action('open-rdp','[data-quick="rdp"]',async()=>{await api(`/api/servers/${encodeURIComponent(id)}/rdp`,{method:'POST'});toast('远程桌面已启动');});
+}
+async function rdpLogout(){
+  if(!cur) return toast('先选择一台服务器',false);const server={...cur};
+  if(!confirm(`确定注销 ${server.name} 的远程桌面会话？桌面上未保存的内容会关闭。`)) return;
+  return action('rdp-logout','[data-quick="logout"]',async()=>{const r=await api(`/api/servers/${encodeURIComponent(server.id)}/rdp_logout`,{method:'POST'});toast(r.msg||'已执行注销');});
+}
+
+let fpath='/root';
+function initFile(){if(!cur){$('#fbody').innerHTML='<tr><td colspan="3" class="empty">先选择一台服务器</td></tr>';return;}loadFiles(fpath);}
+function joinPath(base,name){return (base==='/'?'':base)+'/'+name;}
+function fUp(){if(fpath!=='/') loadFiles(fpath.replace(/\/[^\/]+\/?$/,'')||'/');}
+function fmtSize(n){n=Number(n);if(!Number.isFinite(n)||n<0)return '—';if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';if(n<1073741824)return (n/1048576).toFixed(1)+' MB';return (n/1073741824).toFixed(2)+' GB';}
+function renderCrumbs(){
+  const box=$('#crumbs');box.replaceChildren();
+  function add(label,path){const span=document.createElement('button');span.type='button';span.className='c';span.textContent=label;span.onclick=()=>loadFiles(path);box.appendChild(span);}
+  add('根目录','/');let acc='';
+  fpath.split('/').filter(Boolean).forEach(p=>{acc+='/'+p;const sep=document.createElement('span');sep.className='sep';sep.textContent='›';box.appendChild(sep);add(p,acc);});
+}
+async function loadFiles(path){
+  if(!cur) return;const id=cur.id,version=serverVersion,request=++fileVersion;++searchVersion;
+  $('#fbody').innerHTML='<tr><td colspan="3" class="empty">加载中...</td></tr>';$('#search-results').style.display='none';
+  try{
+    const r=await api(`/api/servers/${encodeURIComponent(id)}/files?path=${encodeURIComponent(path)}`);
+    if(!isCurrent(id,version)||request!==fileVersion) return;
+    if(!Array.isArray(r.items)||typeof r.path!=='string') throw new Error('文件列表返回格式错误');
+    fpath=r.path;renderCrumbs();const box=$('#fbody');box.replaceChildren();
+    if(!r.items.length){box.innerHTML='<tr><td colspan="3" class="empty">（空文件夹）</td></tr>';return;}
+    r.items.forEach(it=>{
+      const fileIcon=icon(it.dir?'folder':'file');
+      const full=joinPath(fpath,it.name),row=document.createElement('tr');row.className='frow';
+      row.innerHTML=`<td><button type="button" class="fname ${it.dir?'isdir':''}">${fileIcon}<span>${esc(it.name)}</span></button></td><td class="muted">${it.dir?'—':fmtSize(it.size)}</td><td class="muted">${esc(it.mtime)}</td>`;
+      row.onclick=()=>{if(isCurrent(id,version)) it.dir?loadFiles(full):previewFile(full);};box.appendChild(row);
+    });
+  }catch(e){if(isCurrent(id,version)&&request===fileVersion){$('#fbody').innerHTML=`<tr><td colspan="3" class="empty">❌ ${esc(e.message)}</td></tr>`;toast(e.message,false);}}
+}
+async function downloadFile(id,path){
+  return action('file-download','#pv-dl',async()=>{
+    const response=await apiResponse(`/api/servers/${encodeURIComponent(id)}/download?path=${encodeURIComponent(path)}`);
+    if((response.headers.get('Content-Type')||'').includes('json')){let data;try{data=await response.json();}catch(e){}throw new Error(errorMessage(data,'下载接口未返回文件'));}
+    const url=URL.createObjectURL(await response.blob()),a=document.createElement('a');
+    a.href=url;a.download=path.split('/').pop()||'download';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+}
+async function previewFile(path){
+  if(!cur)return;const id=cur.id,version=serverVersion,request=++previewVersion;
+  $('#pv-title').textContent=path;$('#pv-body').textContent='加载中...';
+  $('#pv-dl').onclick=()=>{if(isCurrent(id,version))downloadFile(id,path);};showModal('#pv-mask','#pv-dl');
+  try{const r=await api(`/api/servers/${encodeURIComponent(id)}/file?path=${encodeURIComponent(path)}`);if(isCurrent(id,version)&&request===previewVersion)$('#pv-body').textContent=r.content;}
+  catch(e){if(isCurrent(id,version)&&request===previewVersion){$('#pv-body').textContent='❌ '+e.message;toast(e.message,false);}}
+}
+async function doSearch(){
+  if(!cur)return toast('先选择一台服务器',false);const kw=$('#f-search').value.trim();if(!kw)return toast('请输入关键词',false);
+  const id=cur.id,version=serverVersion,path=fpath,mode=$('#f-mode').value,request=++searchVersion;
+  return action('file-search','#file-search',async()=>{
+    const box=$('#search-results');box.style.display='block';box.textContent=`正在 ${path} 下${mode==='content'?'按内容':'按文件名'}搜索 “${kw}” ...`;
+    const r=await api(`/api/servers/${encodeURIComponent(id)}/search`,jsonPost({path,keyword:kw,mode}));
+    if(!isCurrent(id,version)||request!==searchVersion)return;
+    if(!Array.isArray(r.results))throw new Error('搜索结果返回格式错误');
+    box.replaceChildren();if(!r.results.length){box.textContent=`没有找到 “${kw}”，可以试试把目录切到 / 再搜`;return;}
+    const title=document.createElement('div');title.style.color='#f0cf8b';title.textContent=`找到 ${r.results.length} 个结果（点击跳转）：`;box.appendChild(title);
+    r.results.forEach(p=>{const hit=document.createElement('button');hit.type='button';hit.className='hit';hit.textContent=p;const dir=p.replace(/\/[^\/]+$/,'')||'/';hit.onclick=()=>{if(isCurrent(id,version))loadFiles(dir);};box.appendChild(hit);});
+  });
+}
+document.querySelectorAll('#nl-man input').forEach(input=>input.addEventListener('input',invalidateNodeList));
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-selected','false');x.setAttribute('tabindex','-1');});document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');t.setAttribute('aria-selected','true');t.setAttribute('tabindex','0');const p=t.dataset.p;$('#p-'+p).classList.add('active');if(scene)scene.setActive(p==='dash');
+    if(p!=='node'){clearManualInputs();invalidateNodeList();$('#n-sspass').value='';}if(p!=='set')KEY_FIELDS.forEach(name=>$('#k-'+name).value='');
+    if(p==='term')openTerm();if(p==='dash'&&cur)loadDash();if(p==='file')initFile();if(p==='node')initNode();if(p==='clash')window.ClashWorkspace?.activate();if(p==='set'){loadSettings();window.ProductUI?.refresh();}
+  };
+  t.addEventListener('keydown',e=>{const tabs=[...document.querySelectorAll('.tab')];let i=tabs.indexOf(t);if(e.key==='ArrowRight')i=(i+1)%tabs.length;else if(e.key==='ArrowLeft')i=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')i=0;else if(e.key==='End')i=tabs.length-1;else return;e.preventDefault();tabs[i].click();tabs[i].focus();});
+});
+window.addEventListener('resize',()=>{if(fitAddon&&$('#p-term').classList.contains('active'))fitAddon.fit();});
+window.addEventListener('beforeunload',()=>{clearAuthInputs('a');clearManualInputs();KEY_FIELDS.forEach(name=>$('#k-'+name).value='');if(scene)scene.destroy();closeTerm();if(pollTimer)pollTimer.cancel();if(nodePoll)nodePoll.cancel();clearTimeout(toastTimer);clashBlobUrls.forEach(url=>URL.revokeObjectURL(url));clashBlobUrls.clear();});
+$('#f-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doSearch();}});
+$('#server-filter').addEventListener('input',renderServerList);$('#tool-filter').addEventListener('input',renderTools);
+document.querySelectorAll('.filter-chip').forEach(button=>button.onclick=()=>filterTools(button.dataset.toolCategory));
+initNetworkScene();
+window.ClashWorkspace?.init({api,jsonPost,toast,getServers:()=>fleet,ensureIdentity:id=>window.ProductUI?.ensureServerIdentity(id),normalizeConfig:clashConfig});
+loadServers().catch(e=>toast(e.message,false));renderTools();loadSettings();
+window.ProductUI?.init({api,apiResponse,jsonPost,toast,showModal,closeModal,showAdd,loadServers,initNode,hasTasks:()=>busy.has('tool-job')||busy.has('node-job'),onImported:()=>{cur=null;resetServerView();$('#cur-name').textContent='网络控制中心';}});
+
+</script>
+</body>
+</html>
